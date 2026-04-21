@@ -1,14 +1,16 @@
+"use client"; // <--- Thêm dòng này vào đầu file là hết lỗi ngay!
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-    // Trong component của xám cưng
-    const [message, setMessage] = useState("");
+    const [message, setMessage] = useState("Đang chờ Backend...");
 
     useEffect(() => {
         fetch("/api/py/status")
             .then((res) => res.json())
-            .then((data) => setMessage(data.message));
+            .then((data) => setMessage(data.message))
+            .catch((err) => setMessage("Lỗi rồi xám cưng ơi: " + err));
     }, []);
     return (
         <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
