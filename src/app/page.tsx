@@ -8,28 +8,9 @@ export default function Home() {
 
     useEffect(() => {
         fetch("/api/py/status")
-            .then(async (res) => {
-                if (!res.ok) {
-                    throw new Error(`Request failed with status ${res.status}`);
-                }
-
-                const contentType = res.headers.get("content-type") ?? "";
-                if (!contentType.includes("application/json")) {
-                    const body = await res.text();
-                    throw new Error(
-                        `Expected JSON but received: ${body.slice(0, 80)}`,
-                    );
-                }
-
-                return res.json();
-            })
-            .then((data) => setMessage(data.message ?? "Không có message trả về"))
-            .catch((err: unknown) => {
-                const errorMessage =
-                    err instanceof Error ? err.message : String(err);
-                setMessage("Lỗi rồi xám cưng ơi: " + errorMessage);
-                console.error(err);
-            });
+            .then((res) => res.json())
+            .then((data) => setMessage(data.message))
+            .catch((err) => setMessage("Lỗi rồi xám cưng ơi: " + err));
     }, []);
 
     return (
