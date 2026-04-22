@@ -46,6 +46,7 @@ uvicorn index:app --reload --port 8000
 ```
 
 The Python backend is now running at http://127.0.0.1:8000.
+
 ---
 ### Terminal 2: Start the Next.js Frontend
 1. Open a new terminal window and ensure you are in the root directory of the project (Eco-Citizen-game).
@@ -61,6 +62,8 @@ npm install
 ```Bash
 npm run dev
 ```
+
 The frontend is now running at http://localhost:3000.
+
 ## Deploy on Vercel
 
