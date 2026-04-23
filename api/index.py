@@ -4,13 +4,16 @@ from pydantic import BaseModel
 import google.generativeai as genai
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # API Key Configuration
-GEMINI_API_KEY = "AIzaSyCXAchOVxNZv_BWG2WottUKaggoS1Ls4kA"
+GEMINI_API_KEY = ""
 
 # Configure Gemini
-# Fallback to environment variable if the placeholder is not replaced
-api_key_to_use = GEMINI_API_KEY if GEMINI_API_KEY != "PASTE_YOUR_API_KEY_HERE" else os.getenv("GEMINI_API_KEY", "")
+# Fallback to environment variable if the placeholder is empty or default
+api_key_to_use = GEMINI_API_KEY if GEMINI_API_KEY else os.getenv("GEMINI_API_KEY", "")
 genai.configure(api_key=api_key_to_use)
 
 app = FastAPI()
