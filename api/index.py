@@ -9,12 +9,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # API Key Configuration
-GEMINI_API_KEY = ""
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 # Configure Gemini
-# Fallback to environment variable if the placeholder is empty or default
-api_key_to_use = GEMINI_API_KEY if GEMINI_API_KEY else os.getenv("GEMINI_API_KEY", "")
-genai.configure(api_key=api_key_to_use)
+if not GEMINI_API_KEY:
+    print("WARNING: GEMINI_API_KEY environment variable is not set. The API will not function correctly.")
+else:
+    genai.configure(api_key=GEMINI_API_KEY)
 
 app = FastAPI()
 
