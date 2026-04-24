@@ -36,7 +36,8 @@ export function InformerModule() {
         const testScientificRules = "Nếu Thị trưởng ép sơ tán ngay lập tức trong đêm: An toàn tính mạng nhưng gây hoảng loạn và tốn kém. (Ngân sách -20, Tín nhiệm -10, Môi trường 0, Năng lượng -10).Nếu Thị trưởng cho phép ở lại và chằng chống nhà cửa: Chi phí thấp nhưng thảm họa sạt lở xảy ra gây hậu quả nặng nề. (Ngân sách -5, Tín nhiệm -40, Môi trường -20, Năng lượng -10).Nếu Thị trưởng có phương án thông minh (VD: Dùng điện dự phòng thắp sáng đường, cử dân quân dò đường trước khi đưa người già/trẻ em đi): Tốn tài nguyên nhưng được lòng dân. (Ngân sách -15, Tín nhiệm +20, Môi trường -5, Năng lượng -25";
 
         try {
-            const res = await fetch("http://localhost:8000/api/evaluate", {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const res = await fetch(`${apiUrl}/api/evaluate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
