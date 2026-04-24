@@ -59,7 +59,7 @@ export const eventPool: GameEvent[] = [
     event_context: "Do lưu lượng nước ngọt từ thượng nguồn sụt giảm nghiêm trọng trong mùa khô và hiện tượng nước biển dâng do biến đổi khí hậu, xâm nhập mặn đang diễn ra khốc liệt và sớm hơn dự kiến rất nhiều. Cơ sở hạ tầng thủy lợi hiện tại không đủ sức chống đỡ, đe dọa sinh kế và nguồn nước thiết yếu.",
     scientific_rules: "Cộng điểm Ngân sách và Niềm tin nếu đầu tư xây dựng các đập ngăn mặn tạm thời và hỗ trợ cấp nước ngọt bằng xe bồn kịp thời. Cộng điểm Môi trường nếu đưa ra chiến lược chuyển đổi mô hình canh tác thích ứng với biến đổi khí hậu về lâu dài. Trừ rất mạnh Niềm tin nếu để người dân thiếu nước sinh hoạt trầm trọng. Trừ điểm Môi trường nếu xây đập bê tông bừa bãi làm phá vỡ hệ sinh thái tự nhiên.",
     severity: 3
-  }+
+  }
 ];
 
 export function getRandomEvent(): GameEvent {
