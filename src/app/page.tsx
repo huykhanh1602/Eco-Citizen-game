@@ -27,8 +27,8 @@ export default function Page() {
 
         setIsLoading(true);
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-            const res = await fetch(`${apiUrl}/api/evaluate`, {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+            const res = await fetch(`${baseUrl}/api/evaluate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
