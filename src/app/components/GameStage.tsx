@@ -2,10 +2,10 @@
 
 import { motion } from "motion/react";
 import { AlertCircle } from "lucide-react";
-import { Event } from "./InformerModule";
+import { GameEvent } from "../../utils/eventBank";
 
 interface GameStageProps {
-    currentEvent: Event;
+    currentEvent: GameEvent;
 }
 
 export function GameStage({ currentEvent }: GameStageProps) {
