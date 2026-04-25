@@ -33,6 +33,7 @@ class GameRequest(BaseModel):
     event_context: str
     scientific_rules: str
     user_input: str
+    language: str = "vi"
 
 class ResourceChanges(BaseModel):
     energy: int
@@ -52,6 +53,8 @@ async def evaluate_decision(request: GameRequest):
     try:
         model = genai.GenerativeModel("gemini-2.5-flash")
         
+        lang_str = "Vietnamese (Tiếng Việt)" if request.language == 'vi' else "English"
+        
         prompt = f"""
 You are a Climate Simulation Engine for the text-based game "Eco-Citizen AI".
 Evaluate the player's decision based on the following context and scientific rules.
@@ -62,20 +65,24 @@ Event Context:
 Scientific Rules:
 {request.scientific_rules}
 
-Player's Decision (User Input):
+Player's Decision (Mayor's Action):
 {request.user_input}
+
+CRITICAL INSTRUCTIONS:
+1. All text responses (analysis, consequence, suggestion) MUST be written entirely in {lang_str}.
+2. In the "consequence" section, you MUST explicitly list the exact point changes for the 4 metrics: Energy, Environment, Budget, and Trust (e.g. Energy: -10, Environment: +15, Budget: -5, Trust: +10).
 
 Respond STRICTLY with a valid JSON object matching this exact schema:
 {{
-  "analysis": "Detailed analysis of how the decision impacts the situation based on the rules.",
-  "consequence": "The direct, narrative consequence of the action.",
+  "analysis": "Detailed analysis of how the decision impacts the situation based on the rules, in {lang_str}.",
+  "consequence": "The direct, narrative consequence of the action in {lang_str}, clearly listing the point changes for each metric.",
   "changes": {{
     "energy": <integer representing change, e.g., -10, 0, 15>,
     "environment": <integer representing change>,
     "budget": <integer representing change>,
     "trust": <integer representing change>
   }},
-  "suggestion": "A helpful strategic suggestion for the Mayor."
+  "suggestion": "A helpful strategic suggestion for the Mayor in {lang_str}."
 }}
 """
         

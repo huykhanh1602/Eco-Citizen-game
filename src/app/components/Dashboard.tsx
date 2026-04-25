@@ -1,4 +1,5 @@
-import { Zap, Leaf, Coins, Heart } from "lucide-react";
+import { Zap, Leaf, Coins, Heart, Settings } from "lucide-react";
+import { useSettings } from "../contexts/SettingsContext";
 
 interface DashboardProps {
     month: number;
@@ -8,13 +9,15 @@ interface DashboardProps {
         budget: number;
         trust: number;
     };
+    onSettingsClick: () => void;
 }
 
-export function Dashboard({ month, metrics }: DashboardProps) {
+export function Dashboard({ month, metrics, onSettingsClick }: DashboardProps) {
+    const { language } = useSettings();
     const stats = [
         {
             id: "energy",
-            label: "Energy",
+            label: language === 'vi' ? "Năng lượng" : "Energy",
             icon: Zap,
             value: metrics.energy,
             color: "bg-yellow-400",
@@ -23,7 +26,7 @@ export function Dashboard({ month, metrics }: DashboardProps) {
         },
         {
             id: "env",
-            label: "Environment",
+            label: language === 'vi' ? "Môi trường" : "Environment",
             icon: Leaf,
             value: metrics.environment,
             color: "bg-emerald-400",
@@ -32,7 +35,7 @@ export function Dashboard({ month, metrics }: DashboardProps) {
         },
         {
             id: "budget",
-            label: "Budget",
+            label: language === 'vi' ? "Ngân sách" : "Budget",
             icon: Coins,
             value: metrics.budget,
             color: "bg-sky-400",
@@ -41,7 +44,7 @@ export function Dashboard({ month, metrics }: DashboardProps) {
         },
         {
             id: "trust",
-            label: "Trust",
+            label: language === 'vi' ? "Lòng tin" : "Trust",
             icon: Heart,
             value: metrics.trust,
             color: "bg-rose-400",
@@ -55,7 +58,7 @@ export function Dashboard({ month, metrics }: DashboardProps) {
             <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
                 <div className="flex items-center justify-center bg-slate-800 text-white rounded-2xl px-5 py-2.5 shadow-md shadow-slate-200 min-w-[100px]">
                     <div className="text-center">
-                        <div className="text-[10px] uppercase font-bold tracking-widest text-slate-400">Month</div>
+                        <div className="text-[10px] uppercase font-bold tracking-widest text-slate-400">{language === 'vi' ? 'Tháng' : 'Month'}</div>
                         <div className="text-xl font-black">{month}</div>
                     </div>
                 </div>
@@ -87,6 +90,12 @@ export function Dashboard({ month, metrics }: DashboardProps) {
                         </div>
                     );
                 })}
+                <button 
+                    onClick={onSettingsClick}
+                    className="p-3 bg-slate-100 hover:bg-slate-200 rounded-2xl transition-colors text-slate-600 shadow-sm"
+                >
+                    <Settings className="w-6 h-6" />
+                </button>
             </div>
         </header>
     );

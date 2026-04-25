@@ -5,12 +5,17 @@ import { Dashboard } from "./components/Dashboard";
 import { GameStage } from "./components/GameStage";
 import { ActionBar } from "./components/ActionBar";
 import { getRandomEvent, GameEvent } from "../utils/eventBank";
+import { SettingsModal } from "./components/SettingsModal";
+import { useSettings } from "./contexts/SettingsContext";
+import { Settings } from "lucide-react";
 
 export default function Page() {
     // --- App Navigation State ---
     const [appState, setAppState] = useState<'home' | 'story' | 'game'>('home');
     const [mounted, setMounted] = useState(false);
     const [particles, setParticles] = useState<any[]>([]);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const { language } = useSettings();
 
     // --- Game State Management ---
     const [metrics, setMetrics] = useState({ energy: 100, environment: 100, budget: 100, trust: 100 });
@@ -83,9 +88,10 @@ export default function Page() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    event_context: currentEvent.event_context,
-                    scientific_rules: currentEvent.scientific_rules,
-                    user_input: userInput
+                    event_context: currentEvent.event_context[language],
+                    scientific_rules: currentEvent.scientific_rules[language],
+                    user_input: userInput,
+                    language: language
                 })
             });
 
@@ -105,8 +111,8 @@ export default function Page() {
 
             setMetrics(newMetrics);
             setTurnResult({
-                analysis: responseData.analysis || responseData.consequence || "Không có phân tích từ AI.",
-                suggestion: responseData.suggestion || "Không có gợi ý."
+                analysis: responseData.analysis || responseData.consequence || (language === 'vi' ? "Không có phân tích từ AI." : "No analysis from AI."),
+                suggestion: responseData.suggestion || (language === 'vi' ? "Không có gợi ý." : "No suggestion.")
             });
 
             // Handling Game Over
@@ -136,6 +142,18 @@ export default function Page() {
     if (appState === 'home') {
         return (
             <div className="relative h-screen w-full overflow-hidden bg-slate-900 flex items-center justify-center font-sans">
+                <SettingsModal 
+                    isOpen={isSettingsOpen} 
+                    onClose={() => setIsSettingsOpen(false)} 
+                    allowLanguageChange={true} 
+                />
+                <button 
+                    onClick={() => setIsSettingsOpen(true)}
+                    className="absolute top-6 right-6 z-20 p-3 bg-slate-800/50 hover:bg-slate-700/50 rounded-full transition-colors text-slate-300 backdrop-blur-md border border-slate-600"
+                >
+                    <Settings className="w-6 h-6" />
+                </button>
+
                 {/* Background Animated Gradient */}
                 <div className="absolute inset-0 z-0">
                     <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-600/30 blur-[120px] animate-pulse"></div>
@@ -157,7 +175,7 @@ export default function Page() {
                             Eco Citizen
                         </h1>
                         <p className="mt-6 text-xl md:text-2xl font-medium text-slate-300 tracking-wide opacity-90 max-w-2xl mx-auto">
-                            Trở thành Thị trưởng, cân bằng Sinh thái & Phát triển.
+                            {language === 'vi' ? 'Trở thành Thị trưởng, cân bằng Sinh thái & Phát triển.' : 'Become the Mayor, balance Ecology & Development.'}
                         </p>
                     </div>
 
@@ -168,7 +186,7 @@ export default function Page() {
                         <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-500 opacity-70 blur-lg transition duration-500 group-hover:opacity-100 group-hover:duration-200"></div>
                         <div className="relative flex items-center gap-3 px-12 py-5 bg-slate-900 border border-slate-700 rounded-2xl transition-all duration-300 group-hover:bg-slate-800">
                             <span className="text-2xl font-bold text-white tracking-wider">
-                                Start Game
+                                {language === 'vi' ? 'Bắt Đầu Mới' : 'Start Game'}
                             </span>
                         </div>
                     </button>
@@ -196,6 +214,13 @@ export default function Page() {
     if (appState === 'story') {
         return (
             <div className="relative h-screen w-full bg-slate-950 flex flex-col items-center justify-center font-sans p-6 text-center overflow-hidden">
+                <button 
+                    onClick={() => setAppState('game')} 
+                    className="absolute top-6 right-6 z-50 px-6 py-2 text-slate-400 hover:text-white text-sm font-medium transition-colors bg-slate-800/50 hover:bg-slate-700/50 rounded-full border border-slate-700 backdrop-blur-md"
+                >
+                    {language === 'vi' ? 'Bỏ qua' : 'Skip Intro'}
+                </button>
+
                 {/* Cinematic background */}
                 <div className="absolute inset-0 z-0 opacity-20">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950 z-10" />
@@ -205,29 +230,24 @@ export default function Page() {
 
                 <div className="relative z-10 max-w-3xl flex flex-col items-center">
                     <h2 className="text-4xl md:text-5xl font-extrabold text-emerald-400 mb-8 tracking-tight drop-shadow-md">
-                        Khởi Đầu Mới
+                        {language === 'vi' ? 'Khởi Đầu Mới' : 'New Beginning'}
                     </h2>
                     
                     <div className="space-y-6 text-xl md:text-2xl text-slate-300 leading-relaxed font-light mb-12">
                         <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards] delay-[500ms]">
-                            Thành phố đang đứng trên bờ vực khủng hoảng...
+                            {language === 'vi' ? 'Thành phố đang đứng trên bờ vực khủng hoảng...' : 'The city is on the brink of crisis...'}
                         </p>
                         <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards]" style={{ animationDelay: '2s' }}>
-                            Năng lượng dần cạn kiệt, môi trường ô nhiễm nặng nề, và niềm tin của người dân đang sụt giảm từng ngày.
+                            {language === 'vi' ? 'Năng lượng dần cạn kiệt, môi trường ô nhiễm nặng nề, và niềm tin của người dân đang sụt giảm từng ngày.' : 'Energy is depleting, the environment is heavily polluted, and public trust is dropping every day.'}
                         </p>
                         <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards]" style={{ animationDelay: '4s' }}>
-                            Với tư cách là <span className="text-sky-400 font-bold">Tân Thị trưởng</span>, nhiệm vụ của bạn là đưa ra những quyết định khó khăn để thay đổi số phận của nơi này.
+                            {language === 'vi' ? <>Với tư cách là <span className="text-sky-400 font-bold">Tân Thị trưởng</span>, nhiệm vụ của bạn là đưa ra những quyết định khó khăn để thay đổi số phận của nơi này.</> : <>As the <span className="text-sky-400 font-bold">New Mayor</span>, your mission is to make tough decisions to change the fate of this place.</>}
                         </p>
                         <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards]" style={{ animationDelay: '6s' }}>
-                            Bạn sẽ phải cân bằng giữa 4 yếu tố cốt lõi: 
-                            <br/>
-                            <span className="text-amber-400 font-bold">Năng lượng</span>, 
-                            <span className="text-emerald-500 font-bold"> Môi trường</span>, 
-                            <span className="text-blue-400 font-bold"> Ngân sách</span>, và 
-                            <span className="text-purple-400 font-bold"> Lòng tin</span>.
+                            {language === 'vi' ? <>Bạn sẽ phải cân bằng giữa 4 yếu tố cốt lõi: <br/> <span className="text-amber-400 font-bold">Năng lượng</span>, <span className="text-emerald-500 font-bold"> Môi trường</span>, <span className="text-blue-400 font-bold"> Ngân sách</span>, và <span className="text-purple-400 font-bold"> Lòng tin</span>.</> : <>You will have to balance 4 core metrics: <br/> <span className="text-amber-400 font-bold">Energy</span>, <span className="text-emerald-500 font-bold"> Environment</span>, <span className="text-blue-400 font-bold"> Budget</span>, and <span className="text-purple-400 font-bold"> Trust</span>.</>}
                         </p>
                         <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards] text-white font-medium" style={{ animationDelay: '8s' }}>
-                            Sự tồn vong của thành phố nằm trong tay bạn. Chúc may mắn!
+                            {language === 'vi' ? 'Sự tồn vong của thành phố nằm trong tay bạn. Chúc may mắn!' : 'The survival of the city is in your hands. Good luck!'}
                         </p>
                     </div>
 
@@ -236,7 +256,7 @@ export default function Page() {
                         className="opacity-0 animate-[fadeIn_1s_ease-in_forwards] px-10 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(5,150,105,0.4)] hover:shadow-[0_0_30px_rgba(5,150,105,0.6)] hover:-translate-y-1"
                         style={{ animationDelay: '10s' }}
                     >
-                        Tiếp Nhận Chức Vụ
+                        {language === 'vi' ? 'Tiếp Nhận Chức Vụ' : 'Accept Office'}
                     </button>
                 </div>
 
@@ -250,13 +270,35 @@ export default function Page() {
         );
     }
 
+    const handleRestart = () => {
+        setMetrics({ energy: 100, environment: 100, budget: 100, trust: 100 });
+        setCurrentEvent(getRandomEvent());
+        setTurnResult(null);
+        setUserInput("");
+        setGameOver(null);
+        setMonth(1);
+        setAppState('story');
+    };
+
+    const handleGoHome = () => {
+        handleRestart();
+        setAppState('home');
+    };
+
     // ==========================================
     // 3. MAIN GAME SCREEN
     // ==========================================
     return (
         <div className="h-screen w-full flex flex-col bg-gradient-to-b from-sky-50 to-emerald-50 text-slate-800 font-sans overflow-hidden">
+            <SettingsModal 
+                isOpen={isSettingsOpen} 
+                onClose={() => setIsSettingsOpen(false)} 
+                allowLanguageChange={false} 
+                onRestart={handleRestart}
+                onGoHome={handleGoHome}
+            />
             {/* Always show Top Resource Bar */}
-            <Dashboard month={month} metrics={metrics} />
+            <Dashboard month={month} metrics={metrics} onSettingsClick={() => setIsSettingsOpen(true)} />
 
             {gameOver === 'lose' ? (
                 /* Game Over Screen */
@@ -265,24 +307,16 @@ export default function Page() {
                     <div className="bg-white p-12 rounded-[40px] shadow-2xl border-8 border-rose-100 max-w-2xl w-full">
                         <div className="text-6xl mb-6">💥</div>
                         <h1 className="text-4xl md:text-5xl font-extrabold text-rose-600 mb-6 tracking-tight">
-                            Thảm Họa Xảy Ra!
+                            {language === 'vi' ? 'Thảm Họa Xảy Ra!' : 'Disaster Strikes!'}
                         </h1>
                         <p className="text-xl text-slate-600 mb-10 font-medium">
-                            Một trong các chỉ số cốt lõi đã cạn kiệt. Với tư cách là Thị trưởng, bạn đã không thể giữ được sự cân bằng sinh thái và xã hội. 
+                            {language === 'vi' ? 'Một trong các chỉ số cốt lõi đã cạn kiệt. Với tư cách là Thị trưởng, bạn đã không thể giữ được sự cân bằng sinh thái và xã hội.' : 'One of the core metrics has depleted. As Mayor, you failed to maintain ecological and social balance.'}
                         </p>
                         <button 
-                            onClick={() => {
-                                setMetrics({ energy: 100, environment: 100, budget: 100, trust: 100 });
-                                setCurrentEvent(getRandomEvent());
-                                setTurnResult(null);
-                                setUserInput("");
-                                setGameOver(null);
-                                setMonth(1);
-                                setAppState('home');
-                            }}
+                            onClick={handleGoHome}
                             className="bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xl py-5 px-10 rounded-2xl transition-all shadow-[0_8px_0_rgb(225,29,72)] hover:translate-y-[4px] hover:shadow-[0_4px_0_rgb(225,29,72)] active:translate-y-[8px] active:shadow-none w-full"
                         >
-                            Chơi lại từ đầu
+                            {language === 'vi' ? 'Chơi lại từ đầu' : 'Play Again'}
                         </button>
                     </div>
                 </main>
@@ -292,16 +326,16 @@ export default function Page() {
                     <div className="max-w-3xl w-full bg-white rounded-[32px] p-6 md:p-10 shadow-[0_12px_40px_rgb(0,0,0,0.08)] border-4 border-white mt-4 md:mt-10">
                         <h2 className="text-3xl font-extrabold text-slate-800 mb-8 flex items-center gap-3">
                             <span className="bg-sky-100 text-sky-500 p-2 rounded-xl">📊</span> 
-                            Báo Cáo Tháng
+                            {language === 'vi' ? 'Báo Cáo Tháng' : 'Monthly Report'}
                         </h2>
                         
                         <div className="space-y-6 mb-10">
                             <div className="bg-slate-50 rounded-2xl p-6 border-2 border-slate-100">
                                 <h3 className="text-xl font-bold text-sky-600 mb-3 flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-sky-500"></span>
-                                    Phân Tích Hậu Quả
+                                    {language === 'vi' ? 'Phân Tích Hậu Quả' : 'Consequence Analysis'}
                                 </h3>
-                                <p className="text-slate-700 text-lg leading-relaxed">
+                                <p className="text-slate-700 text-lg leading-relaxed whitespace-pre-wrap">
                                     {turnResult.analysis}
                                 </p>
                             </div>
@@ -309,9 +343,9 @@ export default function Page() {
                             <div className="bg-emerald-50 rounded-2xl p-6 border-2 border-emerald-100">
                                 <h3 className="text-xl font-bold text-emerald-600 mb-3 flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                    Gợi Ý Cải Thiện
+                                    {language === 'vi' ? 'Gợi Ý Cải Thiện' : 'Suggestions'}
                                 </h3>
-                                <p className="text-slate-700 text-lg leading-relaxed">
+                                <p className="text-slate-700 text-lg leading-relaxed whitespace-pre-wrap">
                                     {turnResult.suggestion}
                                 </p>
                             </div>
@@ -321,7 +355,7 @@ export default function Page() {
                             onClick={handleNextTurn}
                             className="w-full bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-5 rounded-2xl transition-all shadow-[0_8px_0_rgb(14,165,233)] hover:translate-y-[4px] hover:shadow-[0_4px_0_rgb(14,165,233)] active:translate-y-[8px] active:shadow-none flex items-center justify-center gap-2"
                         >
-                            Tiếp Tục (Next Month)
+                            {language === 'vi' ? 'Tiếp Tục (Tháng Tiếp Theo)' : 'Continue (Next Month)'}
                             <span className="text-2xl">➡️</span>
                         </button>
                     </div>

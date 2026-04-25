@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { AlertCircle } from "lucide-react";
 import { GameEvent } from "../../utils/eventBank";
 import { useState, useEffect } from "react";
+import { useSettings } from "../contexts/SettingsContext";
 
 interface GameStageProps {
     currentEvent: GameEvent;
@@ -11,6 +12,7 @@ interface GameStageProps {
 
 export function GameStage({ currentEvent }: GameStageProps) {
     const [showAlarm, setShowAlarm] = useState(false);
+    const { language } = useSettings();
 
     useEffect(() => {
         // Trigger alarm every time a new event appears
@@ -46,10 +48,10 @@ export function GameStage({ currentEvent }: GameStageProps) {
                     <AlertCircle className="w-8 h-8 md:w-12 md:h-12 animate-pulse text-rose-200" />
                     <div className="flex flex-col items-center text-center">
                         <span className="text-xl md:text-3xl font-black tracking-widest uppercase text-white drop-shadow-md">
-                            Báo Động Khẩn Cấp!
+                            {language === 'vi' ? 'Báo Động Khẩn Cấp!' : 'Emergency Alert!'}
                         </span>
                         <span className="text-xs md:text-sm font-bold text-rose-200 uppercase tracking-widest mt-1">
-                            Sự kiện mới phát sinh
+                            {language === 'vi' ? 'Sự kiện mới phát sinh' : 'New event occurred'}
                         </span>
                     </div>
                     <AlertCircle className="w-8 h-8 md:w-12 md:h-12 animate-pulse text-rose-200" />
@@ -65,7 +67,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                 >
                     <div className="relative w-48 h-48 md:w-72 md:h-72 rounded-[40px] border-[12px] border-white shadow-xl overflow-hidden bg-sky-100 rotate-[-2deg] flex items-center justify-center">
                         {currentEvent.avatarUrl ? (
-                            <img src={currentEvent.avatarUrl} alt={currentEvent.persona} className="w-full h-full object-cover" />
+                            <img src={currentEvent.avatarUrl} alt={currentEvent.persona[language]} className="w-full h-full object-cover" />
                         ) : (
                             <div className="text-sky-400 text-6xl md:text-8xl">🤖</div>
                         )}
@@ -73,7 +75,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                     {/* Status Badge */}
                     <div className="absolute -bottom-4 -right-4 bg-white px-5 py-2.5 rounded-2xl border-4 border-slate-100 shadow-lg transform rotate-6">
                         <span className="font-extrabold text-sky-600 text-sm md:text-base uppercase tracking-wide">
-                            {currentEvent.persona}
+                            {currentEvent.persona[language]}
                         </span>
                     </div>
                 </motion.div>
@@ -95,12 +97,12 @@ export function GameStage({ currentEvent }: GameStageProps) {
                             <AlertCircle className="w-7 h-7 text-rose-500" strokeWidth={3} />
                         </div>
                         <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
-                            {currentEvent.title}
+                            {currentEvent.title[language]}
                         </h2>
                     </div>
 
                     <p className="text-slate-600 text-lg md:text-xl font-medium leading-relaxed mb-2">
-                        &ldquo;{currentEvent.description}&rdquo;
+                        &ldquo;{currentEvent.description[language]}&rdquo;
                     </p>
                 </motion.div>
             </div>

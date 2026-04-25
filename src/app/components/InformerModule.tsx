@@ -9,12 +9,27 @@ export function InformerModule() {
     // State Management
     const [currentEvent, setCurrentEvent] = useState<GameEvent>({
         id: "ev_flood_01",
-        title: "Báo động lũ khẩn cấp!",
-        description: "Thưa Thị trưởng! Hoàn lưu bão đang trút mưa như trút nước xuống bản của chúng tôi suốt 5 tiếng rồi. Đất trên đồi nứt toác, nguy cơ sạt lở ập xuống trong đêm nay là rất lớn! Nhưng ngoài trời tối đen như mực, đường trơn trượt, sơ tán bây giờ cũng vô cùng nguy hiểm. Chúng tôi phải làm sao đây",
+        title: {
+            vi: "Báo động lũ khẩn cấp!",
+            en: "Emergency flood alert!"
+        },
+        description: {
+            vi: "Thưa Thị trưởng! Hoàn lưu bão đang trút mưa như trút nước xuống bản của chúng tôi suốt 5 tiếng rồi. Đất trên đồi nứt toác, nguy cơ sạt lở ập xuống trong đêm nay là rất lớn! Nhưng ngoài trời tối đen như mực, đường trơn trượt, sơ tán bây giờ cũng vô cùng nguy hiểm. Chúng tôi phải làm sao đây",
+            en: "Mayor! The storm circulation has been pouring rain on our village for 5 hours. The hill soil is cracked, the risk of landslides tonight is huge! But it's pitch black outside, the roads are slippery, evacuating now is extremely dangerous. What should we do?"
+        },
         avatarUrl: "", // placeholder
-        persona: "Trưởng bản A Páo",
-        event_context: "",
-        scientific_rules: "",
+        persona: {
+            vi: "Trưởng bản A Páo",
+            en: "Village Chief A Pao"
+        },
+        event_context: {
+            vi: "",
+            en: ""
+        },
+        scientific_rules: {
+            vi: "",
+            en: ""
+        },
         severity: 3
     });
 

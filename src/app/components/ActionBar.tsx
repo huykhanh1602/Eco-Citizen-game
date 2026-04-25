@@ -2,6 +2,7 @@
 
 import { Send, Loader2 } from "lucide-react";
 import React from "react";
+import { useSettings } from "../contexts/SettingsContext";
 
 interface ActionBarProps {
     userInput: string;
@@ -11,6 +12,7 @@ interface ActionBarProps {
 }
 
 export function ActionBar({ userInput, setUserInput, isAnalyzing, onSubmit }: ActionBarProps) {
+    const { language } = useSettings();
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
             e.preventDefault();
@@ -29,7 +31,7 @@ export function ActionBar({ userInput, setUserInput, isAnalyzing, onSubmit }: Ac
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="Nhập quyết định của Thị trưởng vào đây..."
+                        placeholder={language === 'vi' ? "Nhập quyết định của Thị trưởng vào đây..." : "Enter the Mayor's decision here..."}
                         disabled={isAnalyzing}
                         className="w-full bg-slate-50 border-2 border-slate-200 border-b-[6px] rounded-2xl px-5 py-4 md:py-5 text-lg text-slate-700 font-bold placeholder:text-slate-400 placeholder:font-semibold focus:outline-none focus:border-sky-400 focus:border-b-[6px] focus:bg-white transition-colors resize-none h-20 md:h-24 leading-tight disabled:opacity-60 disabled:cursor-not-allowed"
                     />
@@ -46,7 +48,7 @@ export function ActionBar({ userInput, setUserInput, isAnalyzing, onSubmit }: Ac
                         `}
                     >
                         <span className="font-extrabold text-lg md:text-xl tracking-wide whitespace-nowrap">
-                            {isAnalyzing ? "AI đang phân tích..." : "Ra lệnh"}
+                            {isAnalyzing ? (language === 'vi' ? "AI đang phân tích..." : "AI analyzing...") : (language === 'vi' ? "Ra lệnh" : "Execute")}
                         </span>
                         {isAnalyzing ? (
                             <Loader2 className="w-6 h-6 animate-spin" strokeWidth={3} />

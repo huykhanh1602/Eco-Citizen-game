@@ -6,10 +6,16 @@ export const metadata: Metadata = {
     description: "A city management game focused on environmental sustainability",
 };
 
+import { SettingsProvider } from "./contexts/SettingsContext";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            <body>{children}</body>
+            <body>
+                <SettingsProvider>
+                    {children}
+                </SettingsProvider>
+            </body>
         </html>
     );
 }
