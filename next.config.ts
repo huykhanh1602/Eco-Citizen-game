@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
             return [
                 {
                     source: "/api/py/:path*",
-                    destination: "http://127.0.0.1:8000/api/py/:path*", // Chỉ chọc vào cổng 8000 khi ở local
+                    destination: "/api/index.py", // Chỉ chọc vào cổng 8000 khi ở local
                 },
             ];
         }
