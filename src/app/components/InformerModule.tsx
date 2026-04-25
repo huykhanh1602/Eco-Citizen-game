@@ -37,7 +37,7 @@ export function InformerModule() {
 
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-            const res = await fetch(`${apiUrl}/api/evaluate`, {
+            const res = await fetch(`${apiUrl}/api/py/evaluate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

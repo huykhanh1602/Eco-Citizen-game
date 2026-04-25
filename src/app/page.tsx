@@ -28,7 +28,7 @@ export default function Page() {
         setIsLoading(true);
         try {
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
-            const res = await fetch(`${baseUrl}/api/evaluate`, {
+            const res = await fetch(`${baseUrl}/api/py/evaluate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

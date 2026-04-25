@@ -47,7 +47,7 @@ class GameResponse(BaseModel):
     suggestion: str
 
 # The Endpoint
-@app.post("/api/evaluate", response_model=GameResponse)
+@app.post("/api/py/evaluate", response_model=GameResponse)
 async def evaluate_decision(request: GameRequest):
     try:
         model = genai.GenerativeModel("gemini-2.5-flash")
