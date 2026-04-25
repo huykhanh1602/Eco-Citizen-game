@@ -7,18 +7,67 @@ import { ActionBar } from "./components/ActionBar";
 import { getRandomEvent, GameEvent } from "../utils/eventBank";
 
 export default function Page() {
-    // State Management
+    // --- App Navigation State ---
+    const [appState, setAppState] = useState<'home' | 'story' | 'game'>('home');
+    const [mounted, setMounted] = useState(false);
+    const [particles, setParticles] = useState<any[]>([]);
+
+    // --- Game State Management ---
     const [metrics, setMetrics] = useState({ energy: 100, environment: 100, budget: 100, trust: 100 });
     const [currentEvent, setCurrentEvent] = useState<GameEvent | null>(null);
     const [userInput, setUserInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [turnResult, setTurnResult] = useState<{ analysis: string, suggestion: string } | null>(null);
     const [gameOver, setGameOver] = useState<string | null>(null);
+    const [month, setMonth] = useState(1);
 
-    // Initialization
+    // Initialization & Load from LocalStorage
     useEffect(() => {
-        setCurrentEvent(getRandomEvent());
+        const savedState = localStorage.getItem('ecoCitizenGameState');
+        if (savedState) {
+            try {
+                const parsed = JSON.parse(savedState);
+                if (parsed.appState) setAppState(parsed.appState);
+                if (parsed.metrics) setMetrics(parsed.metrics);
+                if (parsed.currentEvent) setCurrentEvent(parsed.currentEvent);
+                if (parsed.turnResult !== undefined) setTurnResult(parsed.turnResult);
+                if (parsed.gameOver !== undefined) setGameOver(parsed.gameOver);
+                if (parsed.month !== undefined) setMonth(parsed.month);
+            } catch (e) {
+                console.error("Failed to parse saved game state");
+                setCurrentEvent(getRandomEvent());
+            }
+        } else {
+            setCurrentEvent(getRandomEvent());
+        }
+
+        setMounted(true);
+        // Generate random values on client side for particles
+        const newParticles = [...Array(20)].map(() => ({
+            width: Math.random() * 6 + 2 + 'px',
+            height: Math.random() * 6 + 2 + 'px',
+            top: Math.random() * 100 + '%',
+            left: Math.random() * 100 + '%',
+            animation: `float ${Math.random() * 10 + 10}s linear infinite`,
+            animationDelay: `-${Math.random() * 10}s`
+        }));
+        setParticles(newParticles);
     }, []);
+
+    // Save to LocalStorage whenever state changes
+    useEffect(() => {
+        if (!mounted) return;
+        
+        const gameState = {
+            appState,
+            metrics,
+            currentEvent,
+            turnResult,
+            gameOver,
+            month
+        };
+        localStorage.setItem('ecoCitizenGameState', JSON.stringify(gameState));
+    }, [appState, metrics, currentEvent, turnResult, gameOver, month, mounted]);
 
     // Handling Submission
     const handleSubmit = async (e?: React.FormEvent) => {
@@ -27,7 +76,8 @@ export default function Page() {
 
         setIsLoading(true);
         try {
-            const res = await fetch("/api/evaluate", {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+            const res = await fetch(`${baseUrl}/api/evaluate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -41,8 +91,10 @@ export default function Page() {
 
             const data = await res.json();
             
-            // Expected backend JSON: { analysis, consequence, changes: { energy, environment, budget, trust }, suggestion }
-            const changes = data.changes || {};
+            // FastAPI wraps HTTPException details in a `detail` key
+            const responseData = data.detail || data;
+            
+            const changes = responseData.changes || {};
             
             const newMetrics = {
                 energy: metrics.energy + (changes.energy || 0),
@@ -53,8 +105,8 @@ export default function Page() {
 
             setMetrics(newMetrics);
             setTurnResult({
-                analysis: data.analysis || data.consequence || "Không có phân tích từ AI.",
-                suggestion: data.suggestion || "Không có gợi ý."
+                analysis: responseData.analysis || responseData.consequence || "Không có phân tích từ AI.",
+                suggestion: responseData.suggestion || "Không có gợi ý."
             });
 
             // Handling Game Over
@@ -63,7 +115,6 @@ export default function Page() {
             }
         } catch (error) {
             console.error("Lỗi khi gọi AI:", error);
-            // Optional: Handle error UI here
         } finally {
             setIsLoading(false);
         }
@@ -74,12 +125,138 @@ export default function Page() {
         setTurnResult(null);
         setUserInput("");
         setCurrentEvent(getRandomEvent());
+        setMonth(prev => prev + 1);
     };
 
+    if (!mounted) return null;
+
+    // ==========================================
+    // 1. HOME SCREEN
+    // ==========================================
+    if (appState === 'home') {
+        return (
+            <div className="relative h-screen w-full overflow-hidden bg-slate-900 flex items-center justify-center font-sans">
+                {/* Background Animated Gradient */}
+                <div className="absolute inset-0 z-0">
+                    <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-600/30 blur-[120px] animate-pulse"></div>
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-sky-600/30 blur-[150px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+                    <div className="absolute top-[30%] left-[30%] w-[40%] h-[40%] rounded-full bg-indigo-500/20 blur-[100px] animate-pulse" style={{ animationDelay: '4s' }}></div>
+                </div>
+
+                {/* Floating Particles */}
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                    {particles.map((style, i) => (
+                        <div key={i} className="absolute bg-white/20 rounded-full" style={style} />
+                    ))}
+                </div>
+
+                {/* Main Content */}
+                <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center">
+                    <div className="mb-12 relative group cursor-default">
+                        <h1 className="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-sky-400 tracking-tighter drop-shadow-lg transition-transform duration-500 group-hover:scale-105">
+                            Eco Citizen
+                        </h1>
+                        <p className="mt-6 text-xl md:text-2xl font-medium text-slate-300 tracking-wide opacity-90 max-w-2xl mx-auto">
+                            Trở thành Thị trưởng, cân bằng Sinh thái & Phát triển.
+                        </p>
+                    </div>
+
+                    <button 
+                        onClick={() => setAppState('story')} 
+                        className="group relative inline-flex items-center justify-center"
+                    >
+                        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-500 opacity-70 blur-lg transition duration-500 group-hover:opacity-100 group-hover:duration-200"></div>
+                        <div className="relative flex items-center gap-3 px-12 py-5 bg-slate-900 border border-slate-700 rounded-2xl transition-all duration-300 group-hover:bg-slate-800">
+                            <span className="text-2xl font-bold text-white tracking-wider">
+                                Start Game
+                            </span>
+                        </div>
+                    </button>
+                    
+                    <p className="mt-16 text-sm text-slate-500 font-medium">
+                        AI-Powered City Management Simulator
+                    </p>
+                </div>
+
+                <style dangerouslySetInnerHTML={{__html: `
+                    @keyframes float {
+                        0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+                        10% { opacity: 1; }
+                        90% { opacity: 1; }
+                        100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+                    }
+                `}} />
+            </div>
+        );
+    }
+
+    // ==========================================
+    // 2. STORY / TUTORIAL SCREEN
+    // ==========================================
+    if (appState === 'story') {
+        return (
+            <div className="relative h-screen w-full bg-slate-950 flex flex-col items-center justify-center font-sans p-6 text-center overflow-hidden">
+                {/* Cinematic background */}
+                <div className="absolute inset-0 z-0 opacity-20">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950 z-10" />
+                    {/* Fake rain / static effect */}
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 animate-pulse"></div>
+                </div>
+
+                <div className="relative z-10 max-w-3xl flex flex-col items-center">
+                    <h2 className="text-4xl md:text-5xl font-extrabold text-emerald-400 mb-8 tracking-tight drop-shadow-md">
+                        Khởi Đầu Mới
+                    </h2>
+                    
+                    <div className="space-y-6 text-xl md:text-2xl text-slate-300 leading-relaxed font-light mb-12">
+                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards] delay-[500ms]">
+                            Thành phố đang đứng trên bờ vực khủng hoảng...
+                        </p>
+                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards]" style={{ animationDelay: '2s' }}>
+                            Năng lượng dần cạn kiệt, môi trường ô nhiễm nặng nề, và niềm tin của người dân đang sụt giảm từng ngày.
+                        </p>
+                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards]" style={{ animationDelay: '4s' }}>
+                            Với tư cách là <span className="text-sky-400 font-bold">Tân Thị trưởng</span>, nhiệm vụ của bạn là đưa ra những quyết định khó khăn để thay đổi số phận của nơi này.
+                        </p>
+                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards]" style={{ animationDelay: '6s' }}>
+                            Bạn sẽ phải cân bằng giữa 4 yếu tố cốt lõi: 
+                            <br/>
+                            <span className="text-amber-400 font-bold">Năng lượng</span>, 
+                            <span className="text-emerald-500 font-bold"> Môi trường</span>, 
+                            <span className="text-blue-400 font-bold"> Ngân sách</span>, và 
+                            <span className="text-purple-400 font-bold"> Lòng tin</span>.
+                        </p>
+                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards] text-white font-medium" style={{ animationDelay: '8s' }}>
+                            Sự tồn vong của thành phố nằm trong tay bạn. Chúc may mắn!
+                        </p>
+                    </div>
+
+                    <button 
+                        onClick={() => setAppState('game')} 
+                        className="opacity-0 animate-[fadeIn_1s_ease-in_forwards] px-10 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(5,150,105,0.4)] hover:shadow-[0_0_30px_rgba(5,150,105,0.6)] hover:-translate-y-1"
+                        style={{ animationDelay: '10s' }}
+                    >
+                        Tiếp Nhận Chức Vụ
+                    </button>
+                </div>
+
+                <style dangerouslySetInnerHTML={{__html: `
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                `}} />
+            </div>
+        );
+    }
+
+    // ==========================================
+    // 3. MAIN GAME SCREEN
+    // ==========================================
     return (
         <div className="h-screen w-full flex flex-col bg-gradient-to-b from-sky-50 to-emerald-50 text-slate-800 font-sans overflow-hidden">
             {/* Always show Top Resource Bar */}
-            <Dashboard metrics={metrics} />
+            <Dashboard month={month} metrics={metrics} />
 
             {gameOver === 'lose' ? (
                 /* Game Over Screen */
@@ -94,7 +271,15 @@ export default function Page() {
                             Một trong các chỉ số cốt lõi đã cạn kiệt. Với tư cách là Thị trưởng, bạn đã không thể giữ được sự cân bằng sinh thái và xã hội. 
                         </p>
                         <button 
-                            onClick={() => window.location.reload()}
+                            onClick={() => {
+                                setMetrics({ energy: 100, environment: 100, budget: 100, trust: 100 });
+                                setCurrentEvent(getRandomEvent());
+                                setTurnResult(null);
+                                setUserInput("");
+                                setGameOver(null);
+                                setMonth(1);
+                                setAppState('home');
+                            }}
                             className="bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xl py-5 px-10 rounded-2xl transition-all shadow-[0_8px_0_rgb(225,29,72)] hover:translate-y-[4px] hover:shadow-[0_4px_0_rgb(225,29,72)] active:translate-y-[8px] active:shadow-none w-full"
                         >
                             Chơi lại từ đầu

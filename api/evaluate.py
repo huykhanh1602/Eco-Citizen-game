@@ -104,7 +104,7 @@ Respond STRICTLY with a valid JSON object matching this exact schema:
                 "budget": 0,
                 "trust": 0
             },
-            "suggestion": "Vui lòng kiểm tra lại GEMINI_API_KEY trong file api/index.py hoặc thử lại sau."
+            "suggestion": "Vui lòng kiểm tra lại GEMINI_API_KEY trong file api/evaluate.py hoặc thử lại sau."
         }
         
         raise HTTPException(status_code=500, detail=fallback_response)

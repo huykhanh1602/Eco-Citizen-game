@@ -1,6 +1,7 @@
 import { Zap, Leaf, Coins, Heart } from "lucide-react";
 
 interface DashboardProps {
+    month: number;
     metrics: {
         energy: number;
         environment: number;
@@ -9,7 +10,7 @@ interface DashboardProps {
     };
 }
 
-export function Dashboard({ metrics }: DashboardProps) {
+export function Dashboard({ month, metrics }: DashboardProps) {
     const stats = [
         {
             id: "energy",
@@ -52,6 +53,12 @@ export function Dashboard({ metrics }: DashboardProps) {
     return (
         <header className="sticky top-0 z-10 w-full px-4 py-4 md:px-8 bg-white/70 backdrop-blur-xl border-b-[3px] border-slate-200">
             <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
+                <div className="flex items-center justify-center bg-slate-800 text-white rounded-2xl px-5 py-2.5 shadow-md shadow-slate-200 min-w-[100px]">
+                    <div className="text-center">
+                        <div className="text-[10px] uppercase font-bold tracking-widest text-slate-400">Month</div>
+                        <div className="text-xl font-black">{month}</div>
+                    </div>
+                </div>
                 {stats.map((stat) => {
                     const Icon = stat.icon;
                     return (
