@@ -70,7 +70,8 @@ Player's Decision (Mayor's Action):
 
 CRITICAL INSTRUCTIONS:
 1. All text responses (analysis, consequence, suggestion) MUST be written entirely in {lang_str}.
-2. In the "consequence" section, you MUST explicitly list the exact point changes for the 4 metrics: Energy, Environment, Budget, and Trust (e.g. Energy: -10, Environment: +15, Budget: -5, Trust: +10).
+2. In the "consequence" section, you MUST explicitly list the exact point changes for the 4 metrics. 
+3. IMPORTANT: The consequences can both increase and decrease multiple metrics simultaneously. Do not limit the changes to just one or two metrics if the decision broadly impacts the city. A good decision might increase several metrics, while a poor one might decrease several.
 
 Respond STRICTLY with a valid JSON object matching this exact schema:
 {{

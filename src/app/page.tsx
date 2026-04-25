@@ -7,7 +7,7 @@ import { ActionBar } from "./components/ActionBar";
 import { getRandomEvent, GameEvent } from "../utils/eventBank";
 import { SettingsModal } from "./components/SettingsModal";
 import { useSettings } from "./contexts/SettingsContext";
-import { Settings } from "lucide-react";
+import { Settings, Zap, Leaf, Coins, Heart } from "lucide-react";
 
 export default function Page() {
     // --- App Navigation State ---
@@ -18,11 +18,11 @@ export default function Page() {
     const { language } = useSettings();
 
     // --- Game State Management ---
-    const [metrics, setMetrics] = useState({ energy: 100, environment: 100, budget: 100, trust: 100 });
+    const [metrics, setMetrics] = useState({ energy: 50, environment: 50, budget: 50, trust: 50 });
     const [currentEvent, setCurrentEvent] = useState<GameEvent | null>(null);
     const [userInput, setUserInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [turnResult, setTurnResult] = useState<{ analysis: string, suggestion: string } | null>(null);
+    const [turnResult, setTurnResult] = useState<{ analysis: string, suggestion: string, changes?: any } | null>(null);
     const [gameOver, setGameOver] = useState<string | null>(null);
     const [month, setMonth] = useState(1);
 
@@ -103,16 +103,17 @@ export default function Page() {
             const changes = responseData.changes || {};
             
             const newMetrics = {
-                energy: metrics.energy + (changes.energy || 0),
-                environment: metrics.environment + (changes.environment || 0),
-                budget: metrics.budget + (changes.budget || 0),
-                trust: metrics.trust + (changes.trust || 0),
+                energy: Math.max(0, Math.min(100, metrics.energy + (changes.energy || 0))),
+                environment: Math.max(0, Math.min(100, metrics.environment + (changes.environment || 0))),
+                budget: Math.max(0, Math.min(100, metrics.budget + (changes.budget || 0))),
+                trust: Math.max(0, Math.min(100, metrics.trust + (changes.trust || 0))),
             };
 
             setMetrics(newMetrics);
             setTurnResult({
                 analysis: responseData.analysis || responseData.consequence || (language === 'vi' ? "Không có phân tích từ AI." : "No analysis from AI."),
-                suggestion: responseData.suggestion || (language === 'vi' ? "Không có gợi ý." : "No suggestion.")
+                suggestion: responseData.suggestion || (language === 'vi' ? "Không có gợi ý." : "No suggestion."),
+                changes: changes
             });
 
             // Handling Game Over
@@ -271,7 +272,7 @@ export default function Page() {
     }
 
     const handleRestart = () => {
-        setMetrics({ energy: 100, environment: 100, budget: 100, trust: 100 });
+        setMetrics({ energy: 50, environment: 50, budget: 50, trust: 50 });
         setCurrentEvent(getRandomEvent());
         setTurnResult(null);
         setUserInput("");
@@ -283,6 +284,22 @@ export default function Page() {
     const handleGoHome = () => {
         handleRestart();
         setAppState('home');
+    };
+
+    const renderStatBadge = (Icon: any, value: number, label: string) => {
+        if (!value) return null;
+        const isPositive = value > 0;
+        const sign = isPositive ? '+' : '';
+        const baseColor = isPositive ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-rose-700 bg-rose-100 border-rose-200';
+        return (
+            <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border-2 ${baseColor} shadow-sm min-w-[120px]`}>
+                <Icon className="w-5 h-5 shrink-0" />
+                <div className="flex flex-col">
+                    <span className="text-[10px] md:text-xs font-bold opacity-80 uppercase tracking-wider">{label}</span>
+                    <span className="text-sm md:text-base font-black leading-none mt-0.5">{sign}{value}</span>
+                </div>
+            </div>
+        );
     };
 
     // ==========================================
@@ -338,6 +355,20 @@ export default function Page() {
                                 <p className="text-slate-700 text-lg leading-relaxed whitespace-pre-wrap">
                                     {turnResult.analysis}
                                 </p>
+                                
+                                {turnResult.changes && Object.values(turnResult.changes).some(val => val !== 0) && (
+                                    <div className="mt-6 pt-5 border-t-2 border-slate-200">
+                                        <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">
+                                            {language === 'vi' ? 'Biến Động Chỉ Số' : 'Stat Changes'}
+                                        </h4>
+                                        <div className="flex flex-wrap gap-3">
+                                            {renderStatBadge(Zap, turnResult.changes.energy, language === 'vi' ? 'Năng lượng' : 'Energy')}
+                                            {renderStatBadge(Leaf, turnResult.changes.environment, language === 'vi' ? 'Môi trường' : 'Environment')}
+                                            {renderStatBadge(Coins, turnResult.changes.budget, language === 'vi' ? 'Ngân sách' : 'Budget')}
+                                            {renderStatBadge(Heart, turnResult.changes.trust, language === 'vi' ? 'Lòng tin' : 'Trust')}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="bg-emerald-50 rounded-2xl p-6 border-2 border-emerald-100">
