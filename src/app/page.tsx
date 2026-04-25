@@ -91,7 +91,8 @@ export default function Page() {
                     event_context: currentEvent.event_context[language],
                     scientific_rules: currentEvent.scientific_rules[language],
                     user_input: userInput,
-                    language: language
+                    language: language,
+                    current_metrics: metrics
                 })
             });
 
@@ -118,7 +119,7 @@ export default function Page() {
 
             // Handling Game Over
             if (newMetrics.energy <= 0 || newMetrics.environment <= 0 || newMetrics.budget <= 0 || newMetrics.trust <= 0) {
-                setGameOver('lose');
+                setGameOver(responseData.game_over_story || (language === 'vi' ? "Thành phố đã sụp đổ vì những quyết định sai lầm của bạn. Người dân phải rời bỏ quê hương để tìm nơi sống mới." : "The city has collapsed due to your poor decisions. Citizens are forced to abandon their homes."));
             }
         } catch (error) {
             console.error("Lỗi khi gọi AI:", error);
@@ -317,7 +318,7 @@ export default function Page() {
             {/* Always show Top Resource Bar */}
             <Dashboard month={month} metrics={metrics} onSettingsClick={() => setIsSettingsOpen(true)} />
 
-            {gameOver === 'lose' ? (
+            {gameOver ? (
                 /* Game Over Screen */
                 <main className="flex-1 flex flex-col items-center justify-center p-8 text-center relative z-10">
                     <div className="absolute inset-0 bg-rose-500/10 backdrop-blur-sm -z-10" />
@@ -326,8 +327,16 @@ export default function Page() {
                         <h1 className="text-4xl md:text-5xl font-extrabold text-rose-600 mb-6 tracking-tight">
                             {language === 'vi' ? 'Thảm Họa Xảy Ra!' : 'Disaster Strikes!'}
                         </h1>
-                        <p className="text-xl text-slate-600 mb-10 font-medium">
-                            {language === 'vi' ? 'Một trong các chỉ số cốt lõi đã cạn kiệt. Với tư cách là Thị trưởng, bạn đã không thể giữ được sự cân bằng sinh thái và xã hội.' : 'One of the core metrics has depleted. As Mayor, you failed to maintain ecological and social balance.'}
+                        
+                        {/* MONTHS IN OFFICE */}
+                        <div className="mb-6 inline-block bg-slate-100 px-6 py-2 rounded-full border-2 border-slate-200">
+                            <span className="text-slate-600 font-bold text-lg md:text-xl">
+                                {language === 'vi' ? `Tại vị: ${month} tháng` : `Months in Office: ${month}`}
+                            </span>
+                        </div>
+
+                        <p className="text-xl text-slate-700 mb-10 font-medium italic leading-relaxed">
+                            "{gameOver}"
                         </p>
                         <button 
                             onClick={handleGoHome}

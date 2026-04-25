@@ -29,11 +29,18 @@ app.add_middleware(
 )
 
 # Data Models (Pydantic)
+class CurrentMetrics(BaseModel):
+    energy: int
+    environment: int
+    budget: int
+    trust: int
+
 class GameRequest(BaseModel):
     event_context: str
     scientific_rules: str
     user_input: str
     language: str = "vi"
+    current_metrics: CurrentMetrics
 
 class ResourceChanges(BaseModel):
     energy: int
@@ -46,6 +53,7 @@ class GameResponse(BaseModel):
     consequence: str
     changes: ResourceChanges
     suggestion: str
+    game_over_story: str = ""
 
 # The Endpoint
 @app.post("/api/evaluate", response_model=GameResponse)
@@ -68,10 +76,17 @@ Scientific Rules:
 Player's Decision (Mayor's Action):
 {request.user_input}
 
+Current City Metrics:
+Energy: {request.current_metrics.energy}/100
+Environment: {request.current_metrics.environment}/100
+Budget: {request.current_metrics.budget}/100
+Trust: {request.current_metrics.trust}/100
+
 CRITICAL INSTRUCTIONS:
 1. All text responses (analysis, consequence, suggestion) MUST be written entirely in {lang_str}.
 2. In the "consequence" section, you MUST explicitly list the exact point changes for the 4 metrics. 
 3. IMPORTANT: The consequences can both increase and decrease multiple metrics simultaneously. Do not limit the changes to just one or two metrics if the decision broadly impacts the city. A good decision might increase several metrics, while a poor one might decrease several.
+4. GAME OVER LOGIC: Calculate the new metrics after applying your point changes. If ANY of the new metrics drop to 0 or below, the player loses the game. In that case, you MUST write a short, tragic narrative (2-3 sentences) in the "game_over_story" field, describing the city's downfall and how the citizens suffer due to the Mayor's failure in {lang_str}. If all new metrics remain strictly above 0, leave "game_over_story" empty ("").
 
 Respond STRICTLY with a valid JSON object matching this exact schema:
 {{
@@ -83,7 +98,8 @@ Respond STRICTLY with a valid JSON object matching this exact schema:
     "budget": <integer representing change>,
     "trust": <integer representing change>
   }},
-  "suggestion": "A helpful strategic suggestion for the Mayor in {lang_str}."
+  "suggestion": "A helpful strategic suggestion for the Mayor in {lang_str}.",
+  "game_over_story": "The tragic ending narrative if any metric drops to <= 0, otherwise empty string."
 }}
 """
         
@@ -112,7 +128,8 @@ Respond STRICTLY with a valid JSON object matching this exact schema:
                 "budget": 0,
                 "trust": 0
             },
-            "suggestion": "Vui lòng kiểm tra lại GEMINI_API_KEY trong file api/evaluate.py hoặc thử lại sau."
+            "suggestion": "Vui lòng kiểm tra lại GEMINI_API_KEY trong file api/evaluate.py hoặc thử lại sau.",
+            "game_over_story": ""
         }
         
         raise HTTPException(status_code=500, detail=fallback_response)
