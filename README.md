@@ -42,7 +42,7 @@ pip install -r requirements.txt
 5. Start the FastAPI server using Uvicorn:
 
 ```Bash
-uvicorn index:app --reload --port 8000
+uvicorn evaluate:app --reload --port 8000
 ```
 
 The Python backend is now running at http://127.0.0.1:8000.

@@ -307,7 +307,7 @@ export default function Page() {
     // 3. MAIN GAME SCREEN
     // ==========================================
     return (
-        <div className="h-screen w-full flex flex-col bg-gradient-to-b from-sky-50 to-emerald-50 text-slate-800 font-sans overflow-hidden">
+        <div className="h-screen w-full flex flex-col text-slate-800 font-sans overflow-hidden">
             <SettingsModal 
                 isOpen={isSettingsOpen} 
                 onClose={() => setIsSettingsOpen(false)} 

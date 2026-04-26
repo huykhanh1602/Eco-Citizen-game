@@ -22,10 +22,14 @@ export function GameStage({ currentEvent }: GameStageProps) {
     }, [currentEvent]);
 
     return (
-        <main className="flex-1 overflow-y-auto w-full flex items-center justify-center p-4 md:p-8 relative">
-            {/* Decorative background blobs */}
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-sky-300/20 rounded-full blur-[80px] -z-10 mix-blend-multiply" />
-            <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-emerald-300/20 rounded-full blur-[100px] -z-10 mix-blend-multiply" />
+        <main className="flex-1 overflow-y-auto w-full flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+            {/* Town background image with blur */}
+            <div
+                className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat blur-[4px] scale-105"
+                style={{ backgroundImage: "url('/backgrounds/town.png')" }}
+            />
+            {/* Overlay to keep content readable while showing town background */}
+            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/25 via-black/10 to-black/30" />
 
             {/* Flashing red screen edge effect during alarm */}
             {showAlarm && (

@@ -25,7 +25,7 @@ export const eventPool: GameEvent[] = [
       vi: "Trưởng bản",
       en: "Village Chief"
     },
-    avatarUrl: "/avatars/truong_ban.png",
+    avatarUrl: "/avatars/villagechef.png",
     description: {
       vi: "Cứu chúng tôi với! Mưa lớn liên tục ba ngày nay khiến đất đá từ trên đồi có nguy cơ sạt lở bất cứ lúc nào. Nước suối dâng cao cuồn cuộn, một số căn nhà ở vùng trũng đã bị cuốn trôi. Xin hãy lập tức có biện pháp sơ tán người dân và gia cố sườn đồi trước khi quá muộn!",
       en: "Help us! Heavy rains for three consecutive days have put rocks on the hills at risk of landslides at any time. The stream water is rising rapidly, and some houses in low-lying areas have been washed away. Please immediately evacuate the people and reinforce the hillside before it's too late!"
@@ -50,7 +50,7 @@ export const eventPool: GameEvent[] = [
       vi: "Người nông dân",
       en: "Farmer"
     },
-    avatarUrl: "/avatars/nong_dan.png",
+    avatarUrl: "/avatars/farmer.png",
     description: {
       vi: "Trời ơi, lúa đang thời kỳ trổ bông mà nứt nẻ hết cả ruộng rồi! Hơn hai tháng nay không có một giọt mưa, các hồ chứa đều trơ đáy. Máy bơm cũng không đủ điện để chạy. Nếu không có nước cứu lúa trong tuần này, cả làng tôi sẽ mất trắng vụ mùa!",
       en: "Oh my god, the rice is in the blooming stage, but the fields are all cracked! Not a drop of rain for over two months, reservoirs are completely dry. The water pumps don't have enough electricity to run. If there's no water to save the rice this week, our entire village will lose the harvest!"
@@ -75,7 +75,7 @@ export const eventPool: GameEvent[] = [
       vi: "Kỹ sư Điện lực",
       en: "Power Engineer"
     },
-    avatarUrl: "/avatars/ky_su_dien.png",
+    avatarUrl: "/avatars/powerengineer.png",
     description: {
       vi: "Nhiệt độ ngoài trời đã vượt mức 42 độ C! Lượng tiêu thụ điện để làm mát tăng đột biến làm hệ thống lưới điện quá tải nghiêm trọng. Một số trạm biến áp đã phát nổ. Chúng tôi buộc phải cắt điện luân phiên, nhưng người già và bệnh nhân trong các khu vực mật độ dân số cao đang kiệt sức!",
       en: "Outdoor temperatures have exceeded 42°C! Electricity consumption for cooling has spiked, severely overloading the power grid. Some substations have exploded. We are forced to implement rolling blackouts, but the elderly and patients in high-density areas are exhausted!"
@@ -100,7 +100,7 @@ export const eventPool: GameEvent[] = [
       vi: "Bác sĩ Hô hấp",
       en: "Respiratory Doctor"
     },
-    avatarUrl: "/avatars/bac_si.png",
+    avatarUrl: "/avatars/doctor.png",
     description: {
       vi: "Phòng cấp cứu của chúng tôi đã quá tải bệnh nhân hen suyễn và viêm phổi cấp! Màn sương mù dày đặc bao phủ thành phố mấy ngày nay thực chất là khói bụi độc hại. Trẻ em đang không thể đến trường. Chúng ta phải hành động ngay để cắt giảm nguồn phát thải từ các nhà máy và phương tiện giao thông!",
       en: "Our ER is overloaded with asthma and acute pneumonia patients! The dense fog blanketing the city for days is actually toxic smog. Children cannot go to school. We must act immediately to cut emissions from factories and transportation!"
@@ -125,7 +125,7 @@ export const eventPool: GameEvent[] = [
       vi: "Kỹ sư Đê điều",
       en: "Dike Engineer"
     },
-    avatarUrl: "/avatars/ky_su_de.png",
+    avatarUrl: "/avatars/dikeengineer.png",
     description: {
       vi: "Nguy to rồi! Nước mặn đã lấn sâu vào nội đồng hơn 60km! Nguồn nước sinh hoạt của người dân đang bị nhiễm mặn nghiêm trọng, các trạm cấp nước không thể xử lý nổi. Vườn cây ăn trái lâu năm của bà con đang rụng lá và chết khô. Cần có giải pháp khẩn cấp để ngăn mặn ngay lập tức!",
       en: "Big trouble! Saltwater has intruded over 60km inland! Residential water sources are severely salinized, water stations can't process it. Farmers' perennial orchards are shedding leaves and dying. We need an urgent solution to stop the salinization immediately!"
