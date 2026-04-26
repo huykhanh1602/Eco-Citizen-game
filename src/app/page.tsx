@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Dashboard } from "./components/Dashboard";
 import { GameStage } from "./components/GameStage";
 import { ActionBar } from "./components/ActionBar";
@@ -214,60 +215,145 @@ export default function Page() {
     // 2. STORY / TUTORIAL SCREEN
     // ==========================================
     if (appState === 'story') {
+        const storyLines = [
+            {
+                delay: 1.6,
+                vi: 'Thành phố đang đứng trên bờ vực khủng hoảng...',
+                en: 'The city is on the brink of crisis...',
+            },
+            {
+                delay: 3.2,
+                vi: 'Năng lượng dần cạn kiệt, môi trường ô nhiễm nặng nề, và niềm tin của người dân đang sụt giảm từng ngày.',
+                en: 'Energy is depleting, the environment is heavily polluted, and public trust is dropping every day.',
+            },
+            {
+                delay: 5.0,
+                vi: (<>Với tư cách là <span className="text-sky-400 font-bold">Tân Thị trưởng</span>, nhiệm vụ của bạn là đưa ra những quyết định khó khăn để thay đổi số phận của nơi này.</>),
+                en: (<>As the <span className="text-sky-400 font-bold">New Mayor</span>, your mission is to make tough decisions to change the fate of this place.</>),
+            },
+            {
+                delay: 6.8,
+                vi: (<>Bạn sẽ phải cân bằng giữa 4 yếu tố cốt lõi:<br/><span className="text-amber-400 font-bold">Năng lượng</span>, <span className="text-emerald-400 font-bold">Môi trường</span>, <span className="text-blue-400 font-bold">Ngân sách</span>, và <span className="text-purple-400 font-bold">Lòng tin</span>.</>),
+                en: (<>You must balance 4 core metrics:<br/><span className="text-amber-400 font-bold">Energy</span>, <span className="text-emerald-400 font-bold">Environment</span>, <span className="text-blue-400 font-bold">Budget</span>, and <span className="text-purple-400 font-bold">Trust</span>.</>),
+            },
+            {
+                delay: 8.4,
+                vi: 'Sự tồn vong của thành phố nằm trong tay bạn. Chúc may mắn!',
+                en: 'The survival of the city is in your hands. Good luck!',
+                bold: true,
+            },
+        ];
+
         return (
-            <div className="relative h-screen w-full bg-slate-950 flex flex-col items-center justify-center font-sans p-6 text-center overflow-hidden">
-                <button 
-                    onClick={() => setAppState('game')} 
-                    className="absolute top-6 right-6 z-50 px-6 py-2 text-slate-400 hover:text-white text-sm font-medium transition-colors bg-slate-800/50 hover:bg-slate-700/50 rounded-full border border-slate-700 backdrop-blur-md"
+            <div className="relative h-screen w-full flex flex-col items-center justify-center font-sans p-6 text-center overflow-hidden">
+
+                {/* ── Skip button (always on top) ── */}
+                <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1, duration: 0.6 }}
+                    onClick={() => setAppState('game')}
+                    className="absolute top-8 right-8 z-[60] px-6 py-2 text-slate-300 hover:text-white text-sm font-semibold transition-all bg-white/10 hover:bg-white/20 rounded-full border border-white/20 backdrop-blur-md"
                 >
-                    {language === 'vi' ? 'Bỏ qua' : 'Skip Intro'}
-                </button>
+                    {language === 'vi' ? 'Bỏ qua ›' : 'Skip ›'}
+                </motion.button>
 
-                {/* Cinematic background */}
-                <div className="absolute inset-0 z-0 opacity-20">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950 z-10" />
-                    {/* Fake rain / static effect */}
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 animate-pulse"></div>
-                </div>
+                {/* ── LAYER 1: Town background blurred ── */}
+                <div
+                    className="absolute -inset-8 z-0 bg-cover bg-center scale-110 blur-[28px] brightness-[0.45]"
+                    style={{ backgroundImage: "url('/backgrounds/town.png')" }}
+                />
 
-                <div className="relative z-10 max-w-3xl flex flex-col items-center">
-                    <h2 className="text-4xl md:text-5xl font-extrabold text-emerald-400 mb-8 tracking-tight drop-shadow-md">
-                        {language === 'vi' ? 'Khởi Đầu Mới' : 'New Beginning'}
-                    </h2>
-                    
-                    <div className="space-y-6 text-xl md:text-2xl text-slate-300 leading-relaxed font-light mb-12">
-                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards] delay-[500ms]">
-                            {language === 'vi' ? 'Thành phố đang đứng trên bờ vực khủng hoảng...' : 'The city is on the brink of crisis...'}
-                        </p>
-                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards]" style={{ animationDelay: '2s' }}>
-                            {language === 'vi' ? 'Năng lượng dần cạn kiệt, môi trường ô nhiễm nặng nề, và niềm tin của người dân đang sụt giảm từng ngày.' : 'Energy is depleting, the environment is heavily polluted, and public trust is dropping every day.'}
-                        </p>
-                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards]" style={{ animationDelay: '4s' }}>
-                            {language === 'vi' ? <>Với tư cách là <span className="text-sky-400 font-bold">Tân Thị trưởng</span>, nhiệm vụ của bạn là đưa ra những quyết định khó khăn để thay đổi số phận của nơi này.</> : <>As the <span className="text-sky-400 font-bold">New Mayor</span>, your mission is to make tough decisions to change the fate of this place.</>}
-                        </p>
-                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards]" style={{ animationDelay: '6s' }}>
-                            {language === 'vi' ? <>Bạn sẽ phải cân bằng giữa 4 yếu tố cốt lõi: <br/> <span className="text-amber-400 font-bold">Năng lượng</span>, <span className="text-emerald-500 font-bold"> Môi trường</span>, <span className="text-blue-400 font-bold"> Ngân sách</span>, và <span className="text-purple-400 font-bold"> Lòng tin</span>.</> : <>You will have to balance 4 core metrics: <br/> <span className="text-amber-400 font-bold">Energy</span>, <span className="text-emerald-500 font-bold"> Environment</span>, <span className="text-blue-400 font-bold"> Budget</span>, and <span className="text-purple-400 font-bold"> Trust</span>.</>}
-                        </p>
-                        <p className="opacity-0 animate-[fadeIn_1s_ease-in_forwards] text-white font-medium" style={{ animationDelay: '8s' }}>
-                            {language === 'vi' ? 'Sự tồn vong của thành phố nằm trong tay bạn. Chúc may mắn!' : 'The survival of the city is in your hands. Good luck!'}
-                        </p>
+                {/* ── LAYER 2: Dark gradient overlay ── */}
+                <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
+
+                {/* ── LAYER 3: Radial vignette ── */}
+                <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,black_100%)]" />
+
+                {/* ── LAYER 4: Scanlines ── */}
+                <div className="pointer-events-none absolute inset-0 z-10 bg-[repeating-linear-gradient(0deg,transparent,transparent_3px,rgba(0,0,0,0.08)_3px,rgba(0,0,0,0.08)_4px)]" />
+
+                {/* ── LAYER 5: Ambient color glows ── */}
+                <motion.div
+                    className="absolute top-[-15%] left-[-10%] w-[55%] h-[55%] rounded-full bg-emerald-500/15 blur-[120px] z-0"
+                    animate={{ scale: [1, 1.1, 1], opacity: [0.6, 1, 0.6] }}
+                    transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                />
+                <motion.div
+                    className="absolute bottom-[-15%] right-[-10%] w-[60%] h-[60%] rounded-full bg-sky-500/15 blur-[140px] z-0"
+                    animate={{ scale: [1, 1.12, 1], opacity: [0.5, 0.9, 0.5] }}
+                    transition={{ repeat: Infinity, duration: 8, ease: "easeInOut", delay: 2 }}
+                />
+
+                {/* ── CINEMATIC LETTERBOX BARS ── */}
+                <motion.div
+                    className="absolute top-0 left-0 right-0 z-20 bg-black origin-top"
+                    initial={{ height: '15%' }}
+                    animate={{ height: '8%' }}
+                    transition={{ duration: 1.2, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
+                />
+                <motion.div
+                    className="absolute bottom-0 left-0 right-0 z-20 bg-black origin-bottom"
+                    initial={{ height: '15%' }}
+                    animate={{ height: '8%' }}
+                    transition={{ duration: 1.2, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
+                />
+
+                {/* ── CONTENT ── */}
+                <div className="relative z-30 max-w-2xl w-full flex flex-col items-center">
+
+                    {/* Title */}
+                    <motion.div
+                        initial={{ opacity: 0, y: -24, letterSpacing: '0.4em' }}
+                        animate={{ opacity: 1, y: 0, letterSpacing: '0.04em' }}
+                        transition={{ duration: 1.4, delay: 0.6, ease: "easeOut" }}
+                        className="mb-2"
+                    >
+                        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-[0_0_40px_rgba(52,211,153,0.7)]">
+                            {language === 'vi' ? 'Khởi Đầu Mới' : 'A New Beginning'}
+                        </h2>
+                    </motion.div>
+
+                    {/* Divider line */}
+                    <motion.div
+                        className="h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent mb-10"
+                        initial={{ width: 0, opacity: 0 }}
+                        animate={{ width: '100%', opacity: 1 }}
+                        transition={{ duration: 1.2, delay: 1.1, ease: "easeOut" }}
+                    />
+
+                    {/* Story paragraphs */}
+                    <div className="space-y-5 text-lg md:text-xl text-slate-200 leading-relaxed font-light mb-14">
+                        {storyLines.map((line, i) => (
+                            <motion.p
+                                key={i}
+                                initial={{ opacity: 0, y: 18, filter: 'blur(4px)' }}
+                                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                transition={{ duration: 1.1, delay: line.delay, ease: "easeOut" }}
+                                className={line.bold ? 'text-white font-semibold text-xl md:text-2xl' : ''}
+                            >
+                                {language === 'vi' ? line.vi : line.en}
+                            </motion.p>
+                        ))}
                     </div>
 
-                    <button 
-                        onClick={() => setAppState('game')} 
-                        className="opacity-0 animate-[fadeIn_1s_ease-in_forwards] px-10 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(5,150,105,0.4)] hover:shadow-[0_0_30px_rgba(5,150,105,0.6)] hover:-translate-y-1"
-                        style={{ animationDelay: '10s' }}
+                    {/* Accept button */}
+                    <motion.button
+                        initial={{ opacity: 0, scale: 0.85, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ duration: 0.9, delay: 10.2, ease: "backOut" }}
+                        whileHover={{ scale: 1.06, boxShadow: '0 0 40px rgba(52,211,153,0.6)' }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => setAppState('game')}
+                        className="relative group px-14 py-5 bg-emerald-600 hover:bg-emerald-500 text-white text-xl font-extrabold rounded-2xl transition-colors duration-300 shadow-[0_0_30px_rgba(5,150,105,0.5)] border border-emerald-400/30 overflow-hidden"
                     >
-                        {language === 'vi' ? 'Tiếp Nhận Chức Vụ' : 'Accept Office'}
-                    </button>
+                        {/* Shimmer */}
+                        <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                        <span className="relative z-10">
+                            {language === 'vi' ? '⚖️  Tiếp Nhận Chức Vụ' : '⚖️  Accept Office'}
+                        </span>
+                    </motion.button>
                 </div>
-
-                <style dangerouslySetInnerHTML={{__html: `
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(10px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-                `}} />
             </div>
         );
     }
@@ -287,19 +373,39 @@ export default function Page() {
         setAppState('home');
     };
 
-    const renderStatBadge = (Icon: any, value: number, label: string) => {
+    // Pre-compute turn result summary (safe even when turnResult is null)
+    const resultChanges = turnResult?.changes || {};
+    const netScore = (resultChanges.energy||0) + (resultChanges.environment||0) + (resultChanges.budget||0) + (resultChanges.trust||0);
+    const isGoodTurn = netScore >= 0;
+
+    const renderStatBadge = (Icon: any, value: number, label: string, idx: number) => {
         if (!value) return null;
         const isPositive = value > 0;
         const sign = isPositive ? '+' : '';
-        const baseColor = isPositive ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-rose-700 bg-rose-100 border-rose-200';
+        const baseColor = isPositive
+            ? 'text-emerald-700 bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-300'
+            : 'text-rose-700 bg-gradient-to-br from-rose-50 to-rose-100 border-rose-300';
         return (
-            <div className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border-2 ${baseColor} shadow-sm min-w-[120px]`}>
+            <motion.div
+                key={label}
+                initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 18, delay: 0.1 + idx * 0.1 }}
+                className={`flex items-center gap-2.5 px-4 py-3 rounded-2xl border-2 ${baseColor} shadow-md min-w-[130px]`}
+            >
                 <Icon className="w-5 h-5 shrink-0" />
                 <div className="flex flex-col">
-                    <span className="text-[10px] md:text-xs font-bold opacity-80 uppercase tracking-wider">{label}</span>
-                    <span className="text-sm md:text-base font-black leading-none mt-0.5">{sign}{value}</span>
+                    <span className="text-[10px] md:text-xs font-bold opacity-70 uppercase tracking-wider">{label}</span>
+                    <motion.span
+                        className="text-base md:text-lg font-black leading-none mt-0.5"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 + idx * 0.1 }}
+                    >
+                        {sign}{value}
+                    </motion.span>
                 </div>
-            </div>
+            </motion.div>
         );
     };
 
@@ -319,87 +425,246 @@ export default function Page() {
             <Dashboard month={month} metrics={metrics} onSettingsClick={() => setIsSettingsOpen(true)} />
 
             {gameOver ? (
-                /* Game Over Screen */
-                <main className="flex-1 flex flex-col items-center justify-center p-8 text-center relative z-10">
-                    <div className="absolute inset-0 bg-rose-500/10 backdrop-blur-sm -z-10" />
-                    <div className="bg-white p-12 rounded-[40px] shadow-2xl border-8 border-rose-100 max-w-2xl w-full">
-                        <div className="text-6xl mb-6">💥</div>
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-rose-600 mb-6 tracking-tight">
-                            {language === 'vi' ? 'Thảm Họa Xảy Ra!' : 'Disaster Strikes!'}
-                        </h1>
-                        
-                        {/* MONTHS IN OFFICE */}
-                        <div className="mb-6 inline-block bg-slate-100 px-6 py-2 rounded-full border-2 border-slate-200">
-                            <span className="text-slate-600 font-bold text-lg md:text-xl">
-                                {language === 'vi' ? `Tại vị: ${month} tháng` : `Months in Office: ${month}`}
-                            </span>
-                        </div>
+                /* ── GAME OVER SCREEN ── */
+                <main className="flex-1 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+                    {/* BG: town.png + heavy red tint */}
+                    <div className="absolute -inset-4 bg-cover bg-center blur-[20px] brightness-[0.3] scale-110" style={{ backgroundImage: "url('/backgrounds/town.png')" }} />
+                    <div className="absolute inset-0 bg-gradient-to-b from-rose-950/80 via-rose-900/60 to-black/90" />
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,black_90%)]" />
 
-                        <p className="text-xl text-slate-700 mb-10 font-medium italic leading-relaxed">
-                            "{gameOver}"
-                        </p>
-                        <button 
-                            onClick={handleGoHome}
-                            className="bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xl py-5 px-10 rounded-2xl transition-all shadow-[0_8px_0_rgb(225,29,72)] hover:translate-y-[4px] hover:shadow-[0_4px_0_rgb(225,29,72)] active:translate-y-[8px] active:shadow-none w-full"
+                    {/* Falling debris particles */}
+                    {[...Array(16)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className="absolute top-0 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-rose-400/60"
+                            style={{ left: `${Math.random() * 100}%` }}
+                            animate={{ y: ['0vh', '110vh'], opacity: [0, 0.8, 0], rotate: [0, 360] }}
+                            transition={{ duration: 2.5 + Math.random() * 3, delay: Math.random() * 2, repeat: Infinity, ease: 'linear' }}
+                        />
+                    ))}
+
+                    {/* Pulsing red vignette */}
+                    <motion.div
+                        className="pointer-events-none absolute inset-0 border-[20px] border-rose-600/40"
+                        animate={{ opacity: [0.4, 0.9, 0.4] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+
+                    {/* Card */}
+                    <motion.div
+                        className="relative z-10 bg-white/95 backdrop-blur-md p-8 md:p-12 rounded-[40px] shadow-[0_0_80px_rgba(225,29,72,0.4)] border-4 border-rose-200 max-w-2xl w-full"
+                        initial={{ opacity: 0, scale: 0.7, y: 60 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.3 }}
+                    >
+                        {/* Explosion icon */}
+                        <motion.div
+                            className="text-7xl md:text-8xl mb-4 select-none"
+                            initial={{ scale: 0, rotate: -30 }}
+                            animate={{ scale: [0, 1.4, 1], rotate: [30, 10, 0] }}
+                            transition={{ duration: 0.7, delay: 0.5, ease: 'backOut' }}
+                        >💥</motion.div>
+
+                        {/* Title with red glow */}
+                        <motion.h1
+                            className="text-3xl md:text-5xl font-black text-rose-600 mb-5 tracking-tight drop-shadow-[0_0_20px_rgba(225,29,72,0.5)]"
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.7, duration: 0.5 }}
                         >
-                            {language === 'vi' ? 'Chơi lại từ đầu' : 'Play Again'}
-                        </button>
-                    </div>
+                            {language === 'vi' ? 'Thảm Họa Xảy Ra!' : 'Disaster Strikes!'}
+                        </motion.h1>
+
+                        {/* Months in office */}
+                        <motion.div
+                            className="mb-5 inline-block bg-rose-50 px-6 py-2.5 rounded-full border-2 border-rose-200 shadow-inner"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.9 }}
+                        >
+                            <span className="text-rose-700 font-extrabold text-lg md:text-xl">
+                                🗓️ {language === 'vi' ? `Tại vị: ${month} tháng` : `Months in Office: ${month}`}
+                            </span>
+                        </motion.div>
+
+                        {/* AI story */}
+                        <motion.p
+                            className="text-lg md:text-xl text-slate-700 mb-8 font-medium italic leading-relaxed border-l-4 border-rose-300 pl-4 text-left"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 1.1, duration: 0.6 }}
+                        >
+                            &ldquo;{gameOver}&rdquo;
+                        </motion.p>
+
+                        {/* Divider */}
+                        <motion.div className="h-px bg-gradient-to-r from-transparent via-rose-200 to-transparent mb-6"
+                            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.3, duration: 0.5 }}
+                        />
+
+                        {/* Button */}
+                        <motion.button
+                            onClick={handleGoHome}
+                            className="relative group w-full bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xl py-5 rounded-2xl transition-colors shadow-[0_8px_0_rgb(190,18,60)] hover:translate-y-1 hover:shadow-[0_4px_0_rgb(190,18,60)] active:translate-y-2 active:shadow-none overflow-hidden"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 1.4 }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                            🔄 {language === 'vi' ? 'Chơi lại từ đầu' : 'Play Again'}
+                        </motion.button>
+                    </motion.div>
                 </main>
-            ) : turnResult ? (
-                /* Result Board (Turn Transition) */
-                <main className="flex-1 overflow-y-auto w-full flex flex-col items-center p-4 md:p-8 relative">
-                    <div className="max-w-3xl w-full bg-white rounded-[32px] p-6 md:p-10 shadow-[0_12px_40px_rgb(0,0,0,0.08)] border-4 border-white mt-4 md:mt-10">
-                        <h2 className="text-3xl font-extrabold text-slate-800 mb-8 flex items-center gap-3">
-                            <span className="bg-sky-100 text-sky-500 p-2 rounded-xl">📊</span> 
+            ) : turnResult ? (() => {
+                // Determine if this turn was net positive or negative
+                const changes = turnResult.changes || {};
+                const netScore = (changes.energy||0)+(changes.environment||0)+(changes.budget||0)+(changes.trust||0);
+                const isGoodTurn = netScore >= 0;
+                return (
+                /* ── AI RESULT SCREEN ── */
+                <main className="flex-1 overflow-y-auto w-full flex flex-col items-center p-4 md:p-8 relative overflow-hidden">
+                    {/* BG: town.png with tinted overlay */}
+                    <div className="absolute inset-0 bg-cover bg-center blur-[3px] brightness-[0.55] scale-105" style={{ backgroundImage: "url('/backgrounds/town.png')" }} />
+                    <div className={`absolute inset-0 bg-gradient-to-b ${
+                        isGoodTurn ? 'from-emerald-950/50 via-sky-950/30 to-slate-950/60' : 'from-rose-950/50 via-slate-950/30 to-slate-950/60'
+                    }`} />
+
+                    {/* Floating sparkle particles */}
+                    {[...Array(10)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className={`absolute bottom-0 rounded-full ${isGoodTurn ? 'bg-emerald-400' : 'bg-rose-400'}`}
+                            style={{ left: `${10 + i * 9}%`, width: 4 + (i % 3) * 3, height: 4 + (i % 3) * 3 }}
+                            animate={{ y: [0, -(120 + i * 30)], opacity: [0, 0.7, 0] }}
+                            transition={{ duration: 3 + i * 0.3, delay: i * 0.2, repeat: Infinity, repeatDelay: 1, ease: 'easeOut' }}
+                        />
+                    ))}
+
+                    {/* Summary banner */}
+                    <motion.div
+                        className={`relative z-10 mt-4 mb-4 px-8 py-3 rounded-2xl border-2 flex items-center gap-3 shadow-lg ${
+                            isGoodTurn
+                            ? 'bg-emerald-600/90 border-emerald-400 text-white'
+                            : 'bg-rose-600/90 border-rose-400 text-white'
+                        }`}
+                        initial={{ opacity: 0, y: -30, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+                    >
+                        <span className="text-2xl">{isGoodTurn ? '✅' : '⚠️'}</span>
+                        <span className="font-extrabold text-lg tracking-wide">
+                            {isGoodTurn
+                                ? (language === 'vi' ? `Tháng ${month}: Quyết định tốt! (+${netScore})` : `Month ${month}: Good decision! (+${netScore})`)
+                                : (language === 'vi' ? `Tháng ${month}: Cần cải thiện (${netScore})` : `Month ${month}: Needs improvement (${netScore})`)}
+                        </span>
+                    </motion.div>
+
+                    {/* Main card */}
+                    <motion.div
+                        className="relative z-10 max-w-3xl w-full bg-white/95 backdrop-blur-md rounded-[32px] p-6 md:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.25)] border-4 border-white/80 mb-6"
+                        initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 250, damping: 22, delay: 0.1 }}
+                    >
+                        {/* Header */}
+                        <motion.h2
+                            className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-6 flex items-center gap-3"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            <span className="bg-sky-100 text-sky-500 p-2.5 rounded-2xl text-2xl">📊</span>
                             {language === 'vi' ? 'Báo Cáo Tháng' : 'Monthly Report'}
-                        </h2>
-                        
-                        <div className="space-y-6 mb-10">
-                            <div className="bg-slate-50 rounded-2xl p-6 border-2 border-slate-100">
-                                <h3 className="text-xl font-bold text-sky-600 mb-3 flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-sky-500"></span>
+                        </motion.h2>
+
+                        <div className="space-y-5 mb-8">
+                            {/* Analysis section */}
+                            <motion.div
+                                className="bg-slate-50 rounded-2xl p-5 md:p-6 border-2 border-slate-100"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.25, duration: 0.5 }}
+                            >
+                                <h3 className="text-lg font-bold text-sky-600 mb-3 flex items-center gap-2">
+                                    <span className="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
                                     {language === 'vi' ? 'Phân Tích Hậu Quả' : 'Consequence Analysis'}
                                 </h3>
-                                <p className="text-slate-700 text-lg leading-relaxed whitespace-pre-wrap">
+                                <motion.p
+                                    className="text-slate-700 text-base md:text-lg leading-relaxed whitespace-pre-wrap"
+                                    initial={{ opacity: 0, filter: 'blur(4px)' }}
+                                    animate={{ opacity: 1, filter: 'blur(0px)' }}
+                                    transition={{ delay: 0.4, duration: 0.6 }}
+                                >
                                     {turnResult.analysis}
-                                </p>
-                                
+                                </motion.p>
+
+                                {/* Stat changes */}
                                 {turnResult.changes && Object.values(turnResult.changes).some(val => val !== 0) && (
-                                    <div className="mt-6 pt-5 border-t-2 border-slate-200">
-                                        <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">
-                                            {language === 'vi' ? 'Biến Động Chỉ Số' : 'Stat Changes'}
+                                    <motion.div
+                                        className="mt-5 pt-5 border-t-2 border-slate-200"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ delay: 0.5 }}
+                                    >
+                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
+                                            {language === 'vi' ? '⚡ Biến Động Chỉ Số' : '⚡ Stat Changes'}
                                         </h4>
                                         <div className="flex flex-wrap gap-3">
-                                            {renderStatBadge(Zap, turnResult.changes.energy, language === 'vi' ? 'Năng lượng' : 'Energy')}
-                                            {renderStatBadge(Leaf, turnResult.changes.environment, language === 'vi' ? 'Môi trường' : 'Environment')}
-                                            {renderStatBadge(Coins, turnResult.changes.budget, language === 'vi' ? 'Ngân sách' : 'Budget')}
-                                            {renderStatBadge(Heart, turnResult.changes.trust, language === 'vi' ? 'Lòng tin' : 'Trust')}
+                                            {renderStatBadge(Zap,   turnResult.changes.energy,      language === 'vi' ? 'Năng lượng' : 'Energy',      0)}
+                                            {renderStatBadge(Leaf,  turnResult.changes.environment,  language === 'vi' ? 'Môi trường' : 'Environment',  1)}
+                                            {renderStatBadge(Coins, turnResult.changes.budget,       language === 'vi' ? 'Ngân sách' : 'Budget',       2)}
+                                            {renderStatBadge(Heart, turnResult.changes.trust,        language === 'vi' ? 'Lòng tin' : 'Trust',         3)}
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 )}
-                            </div>
+                            </motion.div>
 
-                            <div className="bg-emerald-50 rounded-2xl p-6 border-2 border-emerald-100">
-                                <h3 className="text-xl font-bold text-emerald-600 mb-3 flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            {/* Suggestion section */}
+                            <motion.div
+                                className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-5 md:p-6 border-2 border-emerald-100"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4, duration: 0.5 }}
+                            >
+                                <h3 className="text-lg font-bold text-emerald-600 mb-3 flex items-center gap-2">
+                                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                     {language === 'vi' ? 'Gợi Ý Cải Thiện' : 'Suggestions'}
                                 </h3>
-                                <p className="text-slate-700 text-lg leading-relaxed whitespace-pre-wrap">
+                                <motion.p
+                                    className="text-slate-700 text-base md:text-lg leading-relaxed whitespace-pre-wrap"
+                                    initial={{ opacity: 0, filter: 'blur(4px)' }}
+                                    animate={{ opacity: 1, filter: 'blur(0px)' }}
+                                    transition={{ delay: 0.55, duration: 0.6 }}
+                                >
                                     {turnResult.suggestion}
-                                </p>
-                            </div>
+                                </motion.p>
+                            </motion.div>
                         </div>
 
-                        <button 
+                        {/* Next turn button */}
+                        <motion.button
                             onClick={handleNextTurn}
-                            className="w-full bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-5 rounded-2xl transition-all shadow-[0_8px_0_rgb(14,165,233)] hover:translate-y-[4px] hover:shadow-[0_4px_0_rgb(14,165,233)] active:translate-y-[8px] active:shadow-none flex items-center justify-center gap-2"
+                            className="relative group w-full bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xl py-5 rounded-2xl transition-colors shadow-[0_8px_0_rgb(2,132,199)] hover:translate-y-1 hover:shadow-[0_4px_0_rgb(2,132,199)] active:translate-y-2 active:shadow-none flex items-center justify-center gap-3 overflow-hidden"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6 }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                         >
-                            {language === 'vi' ? 'Tiếp Tục (Tháng Tiếp Theo)' : 'Continue (Next Month)'}
-                            <span className="text-2xl">➡️</span>
-                        </button>
-                    </div>
+                            <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                            <span className="relative">{language === 'vi' ? 'Tháng Tiếp Theo' : 'Next Month'}</span>
+                            <motion.span
+                                className="relative text-2xl"
+                                animate={{ x: [0, 6, 0] }}
+                                transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
+                            >➡️</motion.span>
+                        </motion.button>
+                    </motion.div>
                 </main>
+                );
+            })(
             ) : (
                 /* Playing Turn */
                 <>
