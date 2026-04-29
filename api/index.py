@@ -19,6 +19,15 @@ else:
 
 app = FastAPI()
 
+@app.get("/")
+async def root():
+    return {"status": "ok", "message": "Eco-Citizen API is running"}
+
+@app.api_route("/{path_name:path}", methods=["GET", "POST", "OPTIONS"])
+async def catch_all(path_name: str):
+    print(f"DEBUG: Received request to /{path_name}")
+    return {"error": "Not Found", "path": path_name}
+
 # Configure CORS for Next.js local development
 app.add_middleware(
     CORSMiddleware,
@@ -59,7 +68,7 @@ class GameResponse(BaseModel):
 @app.post("/api/evaluate", response_model=GameResponse)
 async def evaluate_decision(request: GameRequest):
     try:
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-1.5-flash")
         
         lang_str = "English" if request.language == 'en' else "Vietnamese (Tiếng Việt)"
         
