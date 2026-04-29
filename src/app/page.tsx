@@ -82,7 +82,7 @@ export default function Page() {
 
         setIsLoading(true);
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://127.0.0.1:8000');
             const res = await fetch(`${baseUrl}/api/evaluate`, {
                 method: "POST",
                 headers: {
