@@ -417,7 +417,7 @@ export default function Page() {
             <SettingsModal 
                 isOpen={isSettingsOpen} 
                 onClose={() => setIsSettingsOpen(false)} 
-                allowLanguageChange={false} 
+                allowLanguageChange={true} 
                 onRestart={handleRestart}
                 onGoHome={handleGoHome}
             />
