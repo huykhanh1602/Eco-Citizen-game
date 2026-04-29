@@ -22,7 +22,7 @@ const defaultSettings: SettingsState = {
     masterVolume: 100,
     musicVolume: 100,
     sfxVolume: 100,
-    language: 'vi'
+    language: 'en'
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
