@@ -83,10 +83,7 @@ export default function Page() {
         setIsLoading(true);
         try {
             const baseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://127.0.0.1:8000');
-            const targetUrl = `${baseUrl}/api/evaluate`;
-            console.log(`[API DEBUG] Fetching from: ${targetUrl}`);
-            
-            const res = await fetch(targetUrl, {
+            const res = await fetch(`${baseUrl}/api/evaluate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -100,16 +97,12 @@ export default function Page() {
                 })
             });
 
-            console.log(`[API DEBUG] Status: ${res.status} ${res.statusText}`);
-            
             if (!res.ok) {
-                console.error(`[API DEBUG] Request failed with status ${res.status}`);
                 const errorText = await res.text();
-                console.error(`[API DEBUG] Error response: ${errorText}`);
+                throw new Error(`API error: ${res.status} ${errorText}`);
             }
 
             const data = await res.json();
-            console.log(`[API DEBUG] Response Data:`, data);
             
             // FastAPI wraps HTTPException details in a `detail` key
             const responseData = data.detail || data;
