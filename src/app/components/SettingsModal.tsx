@@ -10,9 +10,10 @@ interface SettingsModalProps {
     allowLanguageChange: boolean;
     onRestart?: () => void;
     onGoHome?: () => void;
+    onWinAlways?: () => void;
 }
 
-export function SettingsModal({ isOpen, onClose, allowLanguageChange, onRestart, onGoHome }: SettingsModalProps) {
+export function SettingsModal({ isOpen, onClose, allowLanguageChange, onRestart, onGoHome, onWinAlways }: SettingsModalProps) {
     const { 
         masterVolume, setMasterVolume,
         musicVolume, setMusicVolume,
@@ -30,7 +31,8 @@ export function SettingsModal({ isOpen, onClose, allowLanguageChange, onRestart,
         lang: language === 'vi' ? 'Ngôn ngữ' : 'Language',
         close: language === 'vi' ? 'Đóng' : 'Close',
         restart: language === 'vi' ? 'Chơi Lại' : 'Restart',
-        home: language === 'vi' ? 'Về Trang Chủ' : 'Home'
+        home: language === 'vi' ? 'Về Trang Chủ' : 'Home',
+        winAlways: language === 'vi' ? 'Thắng Luôn' : 'Win Always'
     };
 
     return (
@@ -147,6 +149,14 @@ export function SettingsModal({ isOpen, onClose, allowLanguageChange, onRestart,
                                     className="flex-1 py-3 px-4 rounded-xl font-bold transition-all bg-rose-500 hover:bg-rose-600 text-white shadow-[0_4px_0_rgb(225,29,72)] hover:translate-y-[2px] hover:shadow-[0_2px_0_rgb(225,29,72)] active:translate-y-[4px] active:shadow-none"
                                 >
                                     {t.home}
+                                </button>
+                            )}
+                            {onWinAlways && (
+                                <button
+                                    onClick={() => { onClose(); onWinAlways(); }}
+                                    className="flex-1 py-3 px-4 rounded-xl font-bold transition-all bg-emerald-500 hover:bg-emerald-600 text-white shadow-[0_4px_0_rgb(5,150,105)] hover:translate-y-[2px] hover:shadow-[0_2px_0_rgb(5,150,105)] active:translate-y-[4px] active:shadow-none"
+                                >
+                                    {t.winAlways}
                                 </button>
                             )}
                         </div>
