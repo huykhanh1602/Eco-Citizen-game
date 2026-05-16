@@ -65,9 +65,14 @@ function Particle({ color, delay }: { color: string; delay: number }) {
     return (
         <motion.div
             className={`absolute bottom-0 rounded-full opacity-0 ${color}`}
-            style={{ left: `${left}%`, width: size, height: size }}
-            animate={{ y: [0, -(Math.random() * 200 + 150)], opacity: [0, 0.7, 0] }}
-            transition={{ duration: dur, delay, repeat: Infinity, repeatDelay: Math.random() * 3, ease: "easeOut" }}
+            style={{ left: `${left}%`, width: size, height: size, filter: 'blur(1px)' }}
+            animate={{ 
+                y: [0, -(Math.random() * 300 + 200)], 
+                x: [0, Math.random() * 60 - 30, Math.random() * 60 - 30],
+                opacity: [0, 0.8, 0],
+                scale: [1, 1.5, 1]
+            }}
+            transition={{ duration: dur, delay, repeat: Infinity, repeatDelay: Math.random() * 2, ease: "easeInOut" }}
         />
     );
 }
@@ -80,12 +85,20 @@ export function GameStage({ currentEvent }: GameStageProps) {
 
     const sev = SEVERITY[(currentEvent.severity as 1 | 2 | 3) ?? 2];
     const SevIcon = sev.Icon;
+    const { sfxVolume, masterVolume } = useSettings();
 
     useEffect(() => {
         setShowAlarm(true);
         setFlashKey(k => k + 1);          // re-trigger flash on every new event
+        
+        // Play alert sound
+        const audio = new Audio('/alertsound.mp3');
+        audio.volume = (sfxVolume / 100) * (masterVolume / 100);
+        audio.play().catch(e => console.log('Audio play failed:', e));
+
         const t = setTimeout(() => setShowAlarm(false), 4500);
         return () => clearTimeout(t);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentEvent]);
 
     const particles = useMemo(() =>
@@ -98,7 +111,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
             {/* ── Background: town image ────────────────────────────────────── */}
             <div
                 className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat blur-[4px] scale-105"
-                style={{ backgroundImage: "url('/backgrounds/town.png')" }}
+                style={{ backgroundImage: "url('/backgrounds/town.svg')" }}
             />
             {/* Base dark overlay */}
             <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/25 via-black/10 to-black/30" />

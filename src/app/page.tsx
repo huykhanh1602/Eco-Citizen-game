@@ -16,6 +16,7 @@ export default function Page() {
     const [mounted, setMounted] = useState(false);
     const [particles, setParticles] = useState<any[]>([]);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const { language } = useSettings();
 
     // --- Game State Management ---
@@ -74,6 +75,19 @@ export default function Page() {
         };
         localStorage.setItem('ecoCitizenGameState', JSON.stringify(gameState));
     }, [appState, metrics, currentEvent, turnResult, gameOver, month, mounted]);
+
+    // Home Screen Parallax
+    useEffect(() => {
+        if (appState !== 'home') return;
+        const handleMouseMove = (e: MouseEvent) => {
+            setMousePos({
+                x: (e.clientX / window.innerWidth - 0.5) * 30,
+                y: (e.clientY / window.innerHeight - 0.5) * 30
+            });
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, [appState]);
 
     // Handling Submission
     const handleSubmit = async (e?: React.FormEvent) => {
@@ -158,7 +172,7 @@ export default function Page() {
                 </button>
 
                 {/* Background Animated Gradient */}
-                <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 z-0 transition-transform duration-300 ease-out" style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)` }}>
                     <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-600/30 blur-[120px] animate-pulse"></div>
                     <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-sky-600/30 blur-[150px] animate-pulse" style={{ animationDelay: '2s' }}></div>
                     <div className="absolute top-[30%] left-[30%] w-[40%] h-[40%] rounded-full bg-indigo-500/20 blur-[100px] animate-pulse" style={{ animationDelay: '4s' }}></div>
@@ -172,7 +186,10 @@ export default function Page() {
                 </div>
 
                 {/* Main Content */}
-                <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center">
+                <div 
+                    className="relative z-10 flex flex-col items-center justify-center px-4 text-center transition-transform duration-300 ease-out"
+                    style={{ transform: `translate(${-mousePos.x * 0.5}px, ${-mousePos.y * 0.5}px)` }}
+                >
                     <div className="mb-12 relative group cursor-default">
                         <h1 className="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-sky-400 tracking-tighter drop-shadow-lg transition-transform duration-500 group-hover:scale-105">
                             Eco Citizen
@@ -261,7 +278,7 @@ export default function Page() {
                 {/* ── LAYER 1: Town background blurred ── */}
                 <div
                     className="absolute -inset-8 z-0 bg-cover bg-center scale-110 blur-[28px] brightness-[0.45]"
-                    style={{ backgroundImage: "url('/backgrounds/town.png')" }}
+                    style={{ backgroundImage: "url('/backgrounds/town.svg')" }}
                 />
 
                 {/* ── LAYER 2: Dark gradient overlay ── */}
@@ -427,8 +444,8 @@ export default function Page() {
             {gameOver ? (
                 /* ── GAME OVER SCREEN ── */
                 <main className="flex-1 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
-                    {/* BG: town.png + heavy red tint */}
-                    <div className="absolute -inset-4 bg-cover bg-center blur-[20px] brightness-[0.3] scale-110" style={{ backgroundImage: "url('/backgrounds/town.png')" }} />
+                    {/* BG: town.svg + heavy red tint */}
+                    <div className="absolute -inset-4 bg-cover bg-center blur-[20px] brightness-[0.3] scale-110" style={{ backgroundImage: "url('/backgrounds/town.svg')" }} />
                     <div className="absolute inset-0 bg-gradient-to-b from-rose-950/80 via-rose-900/60 to-black/90" />
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,black_90%)]" />
 
@@ -525,8 +542,8 @@ export default function Page() {
                 return (
                 /* ── AI RESULT SCREEN ── */
                 <main className="flex-1 overflow-y-auto w-full flex flex-col items-center p-4 md:p-8 relative overflow-hidden">
-                    {/* BG: town.png with tinted overlay */}
-                    <div className="absolute inset-0 bg-cover bg-center blur-[3px] brightness-[0.55] scale-105" style={{ backgroundImage: "url('/backgrounds/town.png')" }} />
+                    {/* BG: town.svg with tinted overlay */}
+                    <div className="absolute inset-0 bg-cover bg-center blur-[3px] brightness-[0.55] scale-105" style={{ backgroundImage: "url('/backgrounds/town.svg')" }} />
                     <div className={`absolute inset-0 bg-gradient-to-b ${
                         isGoodTurn ? 'from-emerald-950/50 via-sky-950/30 to-slate-950/60' : 'from-rose-950/50 via-slate-950/30 to-slate-950/60'
                     }`} />

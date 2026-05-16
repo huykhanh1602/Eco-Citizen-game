@@ -58,8 +58,8 @@ export function SettingsModal({ isOpen, onClose, allowLanguageChange, onRestart,
                         {/* Master Volume */}
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <label className="font-bold text-slate-700 flex items-center gap-2">
-                                    <Volume2 className="w-5 h-5 text-slate-400" />
+                                <label className="font-bold text-slate-700 flex items-center gap-2 cursor-pointer" onClick={() => setMasterVolume(masterVolume > 0 ? 0 : 100)}>
+                                    <Volume2 className="w-5 h-5 text-slate-400 hover:text-sky-500 transition-colors" />
                                     {t.master}
                                 </label>
                                 <span className="text-slate-500 font-medium text-sm">{masterVolume}%</span>
@@ -75,8 +75,8 @@ export function SettingsModal({ isOpen, onClose, allowLanguageChange, onRestart,
                         {/* Music Volume */}
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <label className="font-bold text-slate-700 flex items-center gap-2">
-                                    <Music className="w-5 h-5 text-slate-400" />
+                                <label className="font-bold text-slate-700 flex items-center gap-2 cursor-pointer" onClick={() => setMusicVolume(musicVolume > 0 ? 0 : 100)}>
+                                    <Music className="w-5 h-5 text-slate-400 hover:text-emerald-500 transition-colors" />
                                     {t.music}
                                 </label>
                                 <span className="text-slate-500 font-medium text-sm">{musicVolume}%</span>
@@ -92,8 +92,8 @@ export function SettingsModal({ isOpen, onClose, allowLanguageChange, onRestart,
                         {/* SFX Volume */}
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <label className="font-bold text-slate-700 flex items-center gap-2">
-                                    <Volume2 className="w-5 h-5 text-slate-400" />
+                                <label className="font-bold text-slate-700 flex items-center gap-2 cursor-pointer" onClick={() => setSfxVolume(sfxVolume > 0 ? 0 : 100)}>
+                                    <Volume2 className="w-5 h-5 text-slate-400 hover:text-amber-500 transition-colors" />
                                     {t.sfx}
                                 </label>
                                 <span className="text-slate-500 font-medium text-sm">{sfxVolume}%</span>
