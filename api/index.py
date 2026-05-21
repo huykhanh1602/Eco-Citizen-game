@@ -28,6 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Data Models (Pydantic)
 class CurrentMetrics(BaseModel):
     energy: int
