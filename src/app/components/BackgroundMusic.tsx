@@ -5,18 +5,19 @@ import { useSettings } from "../contexts/SettingsContext";
 
 interface BackgroundMusicProps {
     /** Current app state to determine when to play/pause music */
-    appState: "home" | "story" | "game" | "victory";
+    appState: "home" | "story" | "game" | "victory" | "defeat";
 }
 
 /**
  * Manages background music playback.
  * Plays Home.mp3 on the home screen, main.mp3 during gameplay,
- * win.mp3 on the victory screen, and pauses on all other screens.
+ * win.mp3 on the victory screen, failed.mp3 on the defeat/game-over screen,
+ * and pauses on all other screens.
  * Restarts main.mp3 from the beginning each time the user enters the game.
  */
 export function BackgroundMusic({ appState }: BackgroundMusicProps) {
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const prevAppStateRef = useRef<"home" | "story" | "game" | "victory">(appState);
+    const prevAppStateRef = useRef<"home" | "story" | "game" | "victory" | "defeat">(appState);
     const { masterVolume, musicVolume } = useSettings();
 
     // Calculate effective volume (master * music)
@@ -81,6 +82,20 @@ export function BackgroundMusic({ appState }: BackgroundMusicProps) {
             if (playPromise !== undefined) {
                 playPromise.catch((err) => {
                     console.warn("Victory music autoplay blocked:", err);
+                });
+            }
+        } else if (appState === "defeat") {
+            // Switch to failed.mp3 (background music for game-over/defeat screen)
+            if (!audio.src.endsWith("/sound/failed.mp3")) {
+                audio.src = "/sound/failed.mp3";
+                audio.loop = true;
+                audio.load();
+            }
+            audio.currentTime = 0;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch((err) => {
+                    console.warn("Defeat music autoplay blocked:", err);
                 });
             }
         } else {
