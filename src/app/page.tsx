@@ -989,7 +989,7 @@ export default function Page() {
     // ==========================================
     return (
         <>
-            <BackgroundMusic appState={appState} />
+            <BackgroundMusic appState={isVictory ? "victory" : appState} />
             {appState === "home" && homeScreen}
             {appState === "story" && storyScreen}
             {appState === "game" && gameScreen}

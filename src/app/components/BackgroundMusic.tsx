@@ -5,18 +5,18 @@ import { useSettings } from "../contexts/SettingsContext";
 
 interface BackgroundMusicProps {
     /** Current app state to determine when to play/pause music */
-    appState: "home" | "story" | "game";
+    appState: "home" | "story" | "game" | "victory";
 }
 
 /**
  * Manages background music playback.
  * Plays Home.mp3 on the home screen, main.mp3 during gameplay,
- * and pauses on all other screens. Restarts main.mp3 from the
- * beginning each time the user enters the game.
+ * win.mp3 on the victory screen, and pauses on all other screens.
+ * Restarts main.mp3 from the beginning each time the user enters the game.
  */
 export function BackgroundMusic({ appState }: BackgroundMusicProps) {
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const prevAppStateRef = useRef<"home" | "story" | "game">(appState);
+    const prevAppStateRef = useRef<"home" | "story" | "game" | "victory">(appState);
     const { masterVolume, musicVolume } = useSettings();
 
     // Calculate effective volume (master * music)
@@ -45,6 +45,7 @@ export function BackgroundMusic({ appState }: BackgroundMusicProps) {
             // Switch to Home.mp3 if not already playing it
             if (!audio.src.endsWith("/sound/Home.mp3")) {
                 audio.src = "/sound/Home.mp3";
+                audio.loop = true;
                 audio.load();
             }
             const playPromise = audio.play();
@@ -57,6 +58,7 @@ export function BackgroundMusic({ appState }: BackgroundMusicProps) {
             // Switch to main.mp3
             if (!audio.src.endsWith("/sound/main.mp3")) {
                 audio.src = "/sound/main.mp3";
+                audio.loop = true;
                 audio.load();
             }
             // Restart from the beginning every time the game is entered
@@ -65,6 +67,20 @@ export function BackgroundMusic({ appState }: BackgroundMusicProps) {
             if (playPromise !== undefined) {
                 playPromise.catch((err) => {
                     console.warn("Game music autoplay blocked:", err);
+                });
+            }
+        } else if (appState === "victory") {
+            // Switch to win.mp3 (background music for victory screen)
+            if (!audio.src.endsWith("/sound/win.mp3")) {
+                audio.src = "/sound/win.mp3";
+                audio.loop = true;
+                audio.load();
+            }
+            audio.currentTime = 0;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch((err) => {
+                    console.warn("Victory music autoplay blocked:", err);
                 });
             }
         } else {
