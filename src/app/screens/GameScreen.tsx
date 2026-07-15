@@ -430,7 +430,7 @@ export function GameScreen({
                                     {language === "vi" ? "Báo Cáo Tháng" : "Monthly Report"}
                                 </motion.h2>
 
-                                <div className="space-y-5 mb-8">
+                                <div id="tutorial-advice-panel" className="space-y-5 mb-8">
                                     {/* Stat changes */}
                                     {turnResult.changes &&
                                         Object.values(turnResult.changes).some(

@@ -197,7 +197,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
             </AnimatePresence>
 
             {/* ── Main content ──────────────────────────────────────────────── */}
-            <div className="max-w-5xl w-full flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 pb-10 mt-14 md:mt-4 relative z-10">
+            <div id="tutorial-event-area" className="max-w-5xl w-full flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 pb-10 mt-14 md:mt-4 relative z-10">
                 {/* Avatar */}
                 <motion.div
                     key={currentEvent.id + "-avatar"}

@@ -4,7 +4,7 @@ import { SettingsModal } from "../components/SettingsModal";
 
 interface HomeScreenProps {
     language: string;
-    setAppState: (state: "home" | "story" | "game") => void;
+    setAppState: (state: "home" | "story" | "game" | "tutorial") => void;
     isSettingsOpen: boolean;
     setIsSettingsOpen: (isOpen: boolean) => void;
     handleWinAlways: () => void;
@@ -80,17 +80,31 @@ export function HomeScreen({
                     </p>
                 </div>
 
-                <button
-                    onClick={() => setAppState("story")}
-                    className="group relative inline-flex items-center justify-center"
-                >
-                    <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-500 opacity-70 blur-lg transition duration-500 group-hover:opacity-100 group-hover:duration-200"></div>
-                    <div className="relative flex items-center gap-3 px-12 py-5 bg-slate-900 border border-slate-700 rounded-2xl transition-all duration-300 group-hover:bg-slate-800">
-                        <span className="text-2xl font-bold text-white tracking-wider">
-                            {language === "vi" ? "Bắt Đầu Mới" : "Start Game"}
-                        </span>
-                    </div>
-                </button>
+                <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
+                    <button
+                        onClick={() => setAppState("story")}
+                        className="group relative inline-flex items-center justify-center"
+                    >
+                        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-500 opacity-70 blur-lg transition duration-500 group-hover:opacity-100 group-hover:duration-200"></div>
+                        <div className="relative flex items-center gap-3 px-12 py-5 bg-slate-900 border border-slate-700 rounded-2xl transition-all duration-300 group-hover:bg-slate-800">
+                            <span className="text-2xl font-bold text-white tracking-wider">
+                                {language === "vi" ? "Bắt Đầu Mới" : "Start Game"}
+                            </span>
+                        </div>
+                    </button>
+
+                    <button
+                        onClick={() => setAppState("tutorial")}
+                        className="group relative inline-flex items-center justify-center"
+                    >
+                        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-500 opacity-40 blur-lg transition duration-500 group-hover:opacity-70 group-hover:duration-200"></div>
+                        <div className="relative flex items-center gap-3 px-10 py-5 bg-slate-900/80 border border-slate-700 rounded-2xl transition-all duration-300 group-hover:bg-slate-800/80">
+                            <span className="text-xl font-bold text-slate-300 tracking-wider group-hover:text-white transition-colors">
+                                {language === "vi" ? "Hướng dẫn" : "Tutorial"}
+                            </span>
+                        </div>
+                    </button>
+                </div>
 
                 <p className="mt-16 text-sm text-slate-500 font-medium">
                     AI-Powered City Management Simulator

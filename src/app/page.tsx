@@ -5,6 +5,7 @@ import { BackgroundMusic } from "./components/BackgroundMusic";
 import { HomeScreen } from "./screens/HomeScreen";
 import { StoryScreen } from "./screens/StoryScreen";
 import { GameScreen } from "./screens/GameScreen";
+import { TutorialScreen } from "./screens/TutorialScreen";
 
 export default function Page() {
     const gameState = useGameState();
@@ -48,6 +49,14 @@ export default function Page() {
                     setUserInput={gameState.setUserInput}
                     isLoading={gameState.isLoading}
                     handleSubmit={gameState.handleSubmit}
+                />
+            )}
+            {gameState.appState === "tutorial" && (
+                <TutorialScreen
+                    language={gameState.language}
+                    setAppState={gameState.setAppState}
+                    isSettingsOpen={gameState.isSettingsOpen}
+                    setIsSettingsOpen={gameState.setIsSettingsOpen}
                 />
             )}
         </>

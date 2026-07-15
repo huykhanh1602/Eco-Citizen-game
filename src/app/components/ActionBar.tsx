@@ -21,7 +21,7 @@ export function ActionBar({ userInput, setUserInput, isAnalyzing, onSubmit }: Ac
     };
 
     return (
-        <footer className="w-full bg-white border-t-[3px] border-slate-200 px-4 py-4 md:px-8 md:py-6 z-20 shrink-0 shadow-[0_-10px_40px_rgb(0,0,0,0.05)]">
+        <footer id="tutorial-input-area" className="w-full bg-white border-t-[3px] border-slate-200 px-4 py-4 md:px-8 md:py-6 z-20 shrink-0 shadow-[0_-10px_40px_rgb(0,0,0,0.05)]">
             <div className="max-w-5xl mx-auto">
                 <form
                     onSubmit={onSubmit}
