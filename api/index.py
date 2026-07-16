@@ -54,6 +54,7 @@ class GameResponse(BaseModel):
     consequence: str
     changes: ResourceChanges
     suggestion: str
+    hint: str  # <--- Tribbie đã thêm trường hint mới vào đây!
     game_over_story: str = ""
 
 # The Endpoint
@@ -84,22 +85,25 @@ Budget: {request.current_metrics.budget}/100
 Trust: {request.current_metrics.trust}/100
 
 CRITICAL INSTRUCTIONS:
-1. All text responses (analysis, consequence, suggestion) MUST be written entirely in {lang_str}.
-2. In the "consequence" section, you MUST explicitly list the exact point changes for the 4 metrics. 
-3. IMPORTANT: The consequences can both increase and decrease multiple metrics simultaneously. Do not limit the changes to just one or two metrics if the decision broadly impacts the city. A good decision might increase several metrics, while a poor one might decrease several.
-4. GAME OVER LOGIC: Calculate the new metrics after applying your point changes. If ANY of the new metrics drop to 0 or below, the player loses the game. In that case, you MUST write a short, tragic narrative (2-3 sentences) in the "game_over_story" field, describing the city's downfall and how the citizens suffer due to the Mayor's failure in {lang_str}. If all new metrics remain strictly above 0, leave "game_over_story" empty ("").
+1. All text responses (analysis, consequence, suggestion, hint) MUST be written entirely in {lang_str}.
+2. In the "consequence" section, write a brief narrative of what happens. ONLY list the names of the metrics that actually changed (increased or decreased) as a result of this decision. Do not mention metrics that remain unchanged. Keep this entire section strictly between 50 and 60 words.
+3. The "suggestion" section MUST act as a helpful Hint (gợi ý/mẹo nhỏ) for the player to make better choices next time. This Hint MUST be strictly between 30 and 40 words in length.
+4. The "hint" section MUST be exactly ONE short, insightful sentence. It should provide a strategic, science-based clue or warning related to the event context and rules to guide the Mayor's thinking before making decisions.
+5. IMPORTANT: The consequences can both increase and decrease multiple metrics simultaneously. Do not limit the changes to just one or two metrics if the decision broadly impacts the city. A good decision might increase several metrics, while a poor one might decrease several.
+6. GAME OVER LOGIC: Calculate the new metrics after applying your point changes. If ANY of the new metrics drop to 0 or below, the player loses the game. In that case, you MUST write a short, tragic narrative (2-3 sentences) in the "game_over_story" field, describing the city's downfall and how the citizens suffer due to the Mayor's failure in {lang_str}. If all new metrics remain strictly above 0, leave "game_over_story" empty ("").
 
 Respond STRICTLY with a valid JSON object matching this exact schema:
 {{
   "analysis": "Detailed analysis of how the decision impacts the situation based on the rules, in {lang_str}.",
-  "consequence": "The direct, narrative consequence of the action in {lang_str}, clearly listing the point changes for each metric.",
+  "consequence": "The direct, narrative consequence of the action in {lang_str}, mentioning ONLY the metrics that changed. (Strict length: 50-60 words)",
   "changes": {{
     "energy": <integer representing change, e.g., -10, 0, 15>,
     "environment": <integer representing change>,
     "budget": <integer representing change>,
     "trust": <integer representing change>
   }},
-  "suggestion": "A helpful strategic suggestion for the Mayor in {lang_str}.",
+  "suggestion": "A helpful Hint (gợi ý) for the Mayor in {lang_str} to handle similar crises. (Strict length: 30-40 words)",
+  "hint": "Exactly ONE short, strategic, science-based clue or warning sentence in {lang_str} to guide the player.",
   "game_over_story": "The tragic ending narrative if any metric drops to <= 0, otherwise empty string."
 }}
 """
@@ -130,6 +134,7 @@ Respond STRICTLY with a valid JSON object matching this exact schema:
                 "trust": 0
             },
             "suggestion": "Please check the GEMINI_API_KEY in the environment variables or try again later.",
+            "hint": "Ensure you balance the city's budget while prioritizing clean energy.",
             "game_over_story": ""
         }
         
