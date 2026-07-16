@@ -3,7 +3,7 @@ import { getRandomEvent, GameEvent } from "../../utils/eventBank";
 import { useSettings } from "../contexts/SettingsContext";
 
 export function useGameState() {
-    const [appState, setAppState] = useState<"home" | "story" | "game" | "tutorial">("home");
+    const [appState, setAppState] = useState<"home" | "story" | "game" | "victory" | "defeat" | "tutorial">("home");
     const [mounted, setMounted] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
