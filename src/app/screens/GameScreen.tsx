@@ -4,8 +4,7 @@ import { Dashboard } from "../components/Dashboard";
 import { GameStage } from "../components/GameStage";
 import { ActionBar } from "../components/ActionBar";
 import { Zap, Leaf, Coins, Heart } from "lucide-react";
-import { GameEvent } from "../../utils/eventBank";
-
+import { GameEvent } from "../game";
 interface GameScreenProps {
     language: string;
     isSettingsOpen: boolean;

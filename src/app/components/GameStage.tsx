@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { AlertCircle, ShieldAlert, Flame, Siren } from "lucide-react";
-import { GameEvent } from "../../utils/eventBank";
+import { GameEvent } from "../game";
 import { useState, useEffect, useMemo } from "react";
 import { useSettings } from "../contexts/SettingsContext";
 
