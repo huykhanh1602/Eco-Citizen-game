@@ -3,7 +3,9 @@ import { getRandomEvent, GameEvent } from "../../utils/eventBank";
 import { useSettings } from "../contexts/SettingsContext";
 
 export function useGameState() {
-    const [appState, setAppState] = useState<"home" | "story" | "game" | "victory" | "defeat" | "tutorial">("home");
+    const [appState, setAppState] = useState<
+        "home" | "story" | "game" | "victory" | "defeat" | "tutorial"
+    >("home");
     const [mounted, setMounted] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -14,6 +16,7 @@ export function useGameState() {
     const [isLoading, setIsLoading] = useState(false);
     const [turnResult, setTurnResult] = useState<{
         analysis: string;
+        consequence: string;
         suggestion: string;
         changes?: any;
     } | null>(null);
@@ -113,8 +116,10 @@ export function useGameState() {
             setTurnResult({
                 analysis:
                     responseData.analysis ||
-                    responseData.consequence ||
                     (language === "vi" ? "Không có phân tích từ AI." : "No analysis from AI."),
+                consequence:
+                    responseData.consequence ||
+                    (language === "vi" ? "Không có hậu quả từ AI." : "No consequence from AI."),
                 suggestion:
                     responseData.suggestion ||
                     (language === "vi" ? "Không có gợi ý." : "No suggestion."),
@@ -176,18 +181,31 @@ export function useGameState() {
     };
 
     return {
-        appState, setAppState,
+        appState,
+        setAppState,
         mounted,
-        isSettingsOpen, setIsSettingsOpen,
-        metrics, setMetrics,
-        currentEvent, setCurrentEvent,
-        userInput, setUserInput,
+        isSettingsOpen,
+        setIsSettingsOpen,
+        metrics,
+        setMetrics,
+        currentEvent,
+        setCurrentEvent,
+        userInput,
+        setUserInput,
         isLoading,
-        turnResult, setTurnResult,
-        gameOver, setGameOver,
-        isVictory, setIsVictory,
-        month, setMonth,
+        turnResult,
+        setTurnResult,
+        gameOver,
+        setGameOver,
+        isVictory,
+        setIsVictory,
+        month,
+        setMonth,
         language,
-        handleSubmit, handleNextTurn, handleRestart, handleGoHome, handleWinAlways
+        handleSubmit,
+        handleNextTurn,
+        handleRestart,
+        handleGoHome,
+        handleWinAlways,
     };
 }

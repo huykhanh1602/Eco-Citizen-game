@@ -16,6 +16,7 @@ interface GameScreenProps {
     gameOver: string | null;
     turnResult: {
         analysis: string;
+        consequence: string;
         suggestion: string;
         changes?: any;
     } | null;
@@ -477,7 +478,28 @@ export function GameScreen({
                                                 </div>
                                             </motion.div>
                                         )}
-                                    {/* Analysis section */}
+                                    {/* Consequence section */}
+                                    <motion.div
+                                        className="bg-slate-50 rounded-2xl p-5 md:p-6 border-2 border-slate-100"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.25, duration: 0.5 }}
+                                    >
+                                        <h3 className="text-lg font-bold text-rose-600 mt-6 mb-3 flex items-center gap-2">
+                                            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                            {language === "vi" ? "Kết Quả" : "Consequence"}
+                                        </h3>
+                                        <motion.p
+                                            className="text-slate-700 text-base md:text-lg leading-relaxed whitespace-pre-wrap"
+                                            initial={{ opacity: 0, filter: "blur(4px)" }}
+                                            animate={{ opacity: 1, filter: "blur(0px)" }}
+                                            transition={{ delay: 0.5, duration: 0.6 }}
+                                        >
+                                            {turnResult.consequence}
+                                        </motion.p>
+                                    </motion.div>
+
+                                    {/*analysis section */}
                                     <motion.div
                                         className="bg-slate-50 rounded-2xl p-5 md:p-6 border-2 border-slate-100"
                                         initial={{ opacity: 0, y: 20 }}
@@ -486,9 +508,7 @@ export function GameScreen({
                                     >
                                         <h3 className="text-lg font-bold text-sky-600 mb-3 flex items-center gap-2">
                                             <span className="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
-                                            {language === "vi"
-                                                ? "Phân Tích Hậu Quả"
-                                                : "Consequence Analysis"}
+                                            {language === "vi" ? "Phân Tích" : "Analysis"}
                                         </h3>
                                         <motion.p
                                             className="text-slate-700 text-base md:text-lg leading-relaxed whitespace-pre-wrap"
