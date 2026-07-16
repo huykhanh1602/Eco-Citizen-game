@@ -36,3 +36,6 @@ Thumbs.db
 *.swp
 *.bak
 .vercel
+docker-compose.yml
+Dockerfile
+.dockerignore

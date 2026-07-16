@@ -16,7 +16,7 @@ export interface GameEvent {
   severity: number;
 }
 
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = process.env.MONGO_URI ;
 
 if (!MONGO_URI) {
   throw new Error("Không tìm thấy cấu hình MONGO_URI trong file .env!");
@@ -31,7 +31,7 @@ let client: MongoClient;
 export async function connectToDatabase(): Promise<void> {
   if (db) return;
   try {
-    client = new MongoClient(MONGO_URI);
+    client = new MongoClient(MONGO_URI!);
     await client.connect();
     db = client.db(DATABASE_NAME);
     console.log(" Đã kết nối thành công tới MongoDB Atlas!");

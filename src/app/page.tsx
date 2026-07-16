@@ -14,7 +14,13 @@ export default function Page() {
 
     return (
         <>
-            <BackgroundMusic appState={gameState.isVictory ? "victory" : gameState.gameOver ? "defeat" : gameState.appState} />
+            <BackgroundMusic appState={gameState.isVictory 
+      ? "victory" 
+      : gameState.gameOver 
+        ? "defeat" 
+        : (gameState.appState as string) === "tutorial" 
+          ? "home" 
+          : gameState.appState} />
             {gameState.appState === "home" && (
                 <HomeScreen
                     language={gameState.language}
