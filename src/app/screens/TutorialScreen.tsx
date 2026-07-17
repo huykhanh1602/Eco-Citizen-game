@@ -108,9 +108,7 @@ function TutorialOverlay({
                     <h2 className="text-2xl font-bold text-white mb-4">
                         {language === "vi" ? "Chúc mừng!" : "Congratulations!"}
                     </h2>
-                    <p className="text-slate-300 mb-8">
-                        {(tutorialDict.step6 as any)[language]}
-                    </p>
+                    <p className="text-slate-300 mb-8">{(tutorialDict.step6 as any)[language]}</p>
                     <button
                         onClick={onFinish}
                         className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl transition-colors w-full"
@@ -170,8 +168,8 @@ function TutorialOverlay({
                                 20,
                                 Math.min(
                                     targetRect.left + targetRect.width / 2 - 192,
-                                    window.innerWidth - 400
-                                )
+                                    window.innerWidth - 400,
+                                ),
                             ),
                         }}
                     >
@@ -200,7 +198,7 @@ export function TutorialScreen({
     setIsSettingsOpen,
 }: TutorialScreenProps) {
     const [step, setStep] = useState(1);
-    
+
     // Mock State for GameScreen
     const [metrics, setMetrics] = useState({ energy: 50, environment: 50, budget: 50, trust: 50 });
     const [userInput, setUserInput] = useState("");
