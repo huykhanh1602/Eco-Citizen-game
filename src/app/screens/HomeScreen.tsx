@@ -40,12 +40,21 @@ export function HomeScreen({
                 allowLanguageChange={true}
                 onWinAlways={handleWinAlways}
             />
-            <button
-                onClick={() => setIsSettingsOpen(true)}
-                className="absolute top-6 right-6 z-20 p-3 bg-slate-800/50 hover:bg-slate-700/50 rounded-full transition-colors text-slate-300 backdrop-blur-md border border-slate-600"
-            >
-                <Settings className="w-6 h-6" />
-            </button>
+            {/* Settings Button & Language Hint */}
+            <div className="absolute top-6 right-6 z-20 flex items-center gap-3">
+                {/* Dòng chữ gợi ý đổi ngôn ngữ */}
+                <span className="hidden sm:inline-block text-xs md:text-sm font-semibold text-emerald-400 bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-xl backdrop-blur-md shadow-lg animate-breath-slide pointer-events-none tracking-wide">
+                    {language === "vi" ? "Change language here" : "Đổi ngôn ngữ ở đây"}
+                </span>
+
+                {/* Nút cài đặt */}
+                <button
+                    onClick={() => setIsSettingsOpen(true)}
+                    className="p-3 bg-slate-800/50 hover:bg-slate-700/50 rounded-full transition-all duration-300 text-slate-300 hover:text-white backdrop-blur-md border border-slate-600 hover:scale-105 shadow-md active:scale-95"
+                >
+                    <Settings className="w-6 h-6" />
+                </button>
+            </div>
 
             {/* Background Animated Gradient */}
             <div className="absolute inset-0 z-0">
@@ -114,13 +123,29 @@ export function HomeScreen({
             <style
                 dangerouslySetInnerHTML={{
                     __html: `
-                        @keyframes float {
-                            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-                            10% { opacity: 1; }
-                            90% { opacity: 1; }
-                            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-                        }
-                    `,
+            @keyframes float {
+                0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+                10% { opacity: 1; }
+                90% { opacity: 1; }
+                100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+            }
+            
+            /* Hiệu ứng nhịp thở (Breathing) kết hợp nhích sang trái phải (Slide) */
+            @keyframes breathAndSlide {
+                0%, 100% { 
+                    opacity: 0.6; 
+                    transform: translateX(4px); 
+                }
+                50% { 
+                    opacity: 1; 
+                    transform: translateX(-4px); 
+                }
+            }
+            
+            .animate-breath-slide {
+                animation: breathAndSlide 2s infinite ease-in-out;
+            }
+        `,
                 }}
             />
         </div>
