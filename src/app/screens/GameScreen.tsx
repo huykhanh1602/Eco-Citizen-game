@@ -1,10 +1,11 @@
-import { motion } from "motion/react";
 import { SettingsModal } from "../components/SettingsModal";
 import { Dashboard } from "../components/Dashboard";
 import { GameStage } from "../components/GameStage";
 import { ActionBar } from "../components/ActionBar";
-import { Zap, Leaf, Coins, Heart } from "lucide-react";
+import { Zap, Leaf, Coins, Heart, Lightbulb, AlertCircle, Search, ChevronDown } from "lucide-react";
 import { GameEvent } from "../../utils/eventBank";
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface GameScreenProps {
     language: string;
@@ -50,6 +51,7 @@ export function GameScreen({
     isLoading,
     handleSubmit,
 }: GameScreenProps) {
+    const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
     const renderStatBadge = (Icon: any, value: number, label: string, idx: number) => {
         if (!value) return null;
         const isPositive = value > 0;
@@ -480,17 +482,19 @@ export function GameScreen({
                                         )}
                                     {/* Consequence section */}
                                     <motion.div
-                                        className="bg-slate-50 rounded-2xl p-5 md:p-6 border-2 border-slate-100"
+                                        className="bg-rose-50/60 rounded-2xl p-5 md:p-6 border-2 border-rose-100 shadow-sm"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.25, duration: 0.5 }}
                                     >
-                                        <h3 className="text-lg font-bold text-rose-600 mt-6 mb-3 flex items-center gap-2">
-                                            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                        <h3 className="text-lg font-bold text-rose-700 mb-3 flex items-center gap-2.5">
+                                            <span className="p-2 bg-rose-100/80 rounded-lg text-rose-600">
+                                                <AlertCircle size={20} className="animate-pulse" />
+                                            </span>
                                             {language === "vi" ? "Kết Quả" : "Consequence"}
                                         </h3>
                                         <motion.p
-                                            className="text-slate-700 text-base md:text-lg leading-relaxed whitespace-pre-wrap"
+                                            className="text-rose-950 text-base md:text-lg leading-relaxed whitespace-pre-wrap pl-1 font-medium"
                                             initial={{ opacity: 0, filter: "blur(4px)" }}
                                             animate={{ opacity: 1, filter: "blur(0px)" }}
                                             transition={{ delay: 0.5, duration: 0.6 }}
@@ -499,43 +503,97 @@ export function GameScreen({
                                         </motion.p>
                                     </motion.div>
 
-                                    {/*analysis section */}
+                                    {/* Analysis section */}
                                     <motion.div
-                                        className="bg-slate-50 rounded-2xl p-5 md:p-6 border-2 border-slate-100"
+                                        className={`rounded-2xl border-2 transition-all duration-300 shadow-sm overflow-hidden ${
+                                            isAnalysisOpen
+                                                ? "bg-sky-50/70 border-sky-200"
+                                                : "bg-sky-50/30 border-sky-100 hover:border-sky-200"
+                                        }`}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.25, duration: 0.5 }}
+                                        transition={{ delay: 0.35, duration: 0.5 }}
                                     >
-                                        <h3 className="text-lg font-bold text-sky-600 mb-3 flex items-center gap-2">
-                                            <span className="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
-                                            {language === "vi" ? "Phân Tích" : "Analysis"}
-                                        </h3>
-                                        <motion.p
-                                            className="text-slate-700 text-base md:text-lg leading-relaxed whitespace-pre-wrap"
-                                            initial={{ opacity: 0, filter: "blur(4px)" }}
-                                            animate={{ opacity: 1, filter: "blur(0px)" }}
-                                            transition={{ delay: 0.4, duration: 0.6 }}
+                                        <button
+                                            onClick={() => setIsAnalysisOpen(!isAnalysisOpen)}
+                                            className="w-full p-5 md:p-6 flex items-center justify-between text-left focus:outline-none"
                                         >
-                                            {turnResult.analysis}
-                                        </motion.p>
+                                            <div className="flex items-center gap-2.5">
+                                                <span
+                                                    className={`p-2 rounded-lg transition-colors duration-300 ${
+                                                        isAnalysisOpen
+                                                            ? "bg-sky-200/80 text-sky-700"
+                                                            : "bg-sky-100 text-sky-600"
+                                                    }`}
+                                                >
+                                                    <Search size={20} />
+                                                </span>
+                                                <div>
+                                                    <h3 className="text-lg font-bold text-sky-700">
+                                                        {language === "vi"
+                                                            ? "Phân Tích"
+                                                            : "Analysis"}
+                                                    </h3>
+                                                    <p className="text-xs text-sky-600/70 mt-0.5 font-medium">
+                                                        {language === "vi"
+                                                            ? "Bấm để xem chi tiết lý do"
+                                                            : "Click to view detailed insights"}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <motion.div
+                                                animate={{ rotate: isAnalysisOpen ? 180 : 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="text-sky-500 p-1 hover:text-sky-700"
+                                            >
+                                                <ChevronDown size={20} />
+                                            </motion.div>
+                                        </button>
+
+                                        <AnimatePresence initial={false}>
+                                            {isAnalysisOpen && (
+                                                <motion.div
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: "auto", opacity: 1 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                    transition={{
+                                                        duration: 0.3,
+                                                        ease: "easeInOut",
+                                                    }}
+                                                >
+                                                    <div className="px-5 md:px-6 pb-6 pt-2 border-t border-sky-100">
+                                                        <motion.p
+                                                            className="text-sky-950 text-base md:text-lg leading-relaxed whitespace-pre-wrap pl-1 font-medium"
+                                                            initial={{ opacity: 0, y: -10 }}
+                                                            animate={{ opacity: 1, y: 0 }}
+                                                            transition={{ duration: 0.2 }}
+                                                        >
+                                                            {turnResult.analysis}
+                                                        </motion.p>
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                     </motion.div>
 
                                     {/* Suggestion section */}
                                     <motion.div
-                                        className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-5 md:p-6 border-2 border-emerald-100"
+                                        className="bg-emerald-50/60 rounded-2xl p-5 md:p-6 border-2 border-emerald-100 shadow-sm"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.4, duration: 0.5 }}
+                                        transition={{ delay: 0.45, duration: 0.5 }}
                                     >
-                                        <h3 className="text-lg font-bold text-emerald-600 mb-3 flex items-center gap-2">
-                                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <h3 className="text-lg font-bold text-emerald-700 mb-3 flex items-center gap-2.5">
+                                            <span className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
+                                                <Lightbulb size={20} />
+                                            </span>
                                             {language === "vi" ? "Gợi Ý Cải Thiện" : "Suggestions"}
                                         </h3>
                                         <motion.p
-                                            className="text-slate-700 text-base md:text-lg leading-relaxed whitespace-pre-wrap"
+                                            className="text-emerald-950 text-base md:text-lg leading-relaxed whitespace-pre-wrap pl-1 font-medium"
                                             initial={{ opacity: 0, filter: "blur(4px)" }}
                                             animate={{ opacity: 1, filter: "blur(0px)" }}
-                                            transition={{ delay: 0.55, duration: 0.6 }}
+                                            transition={{ delay: 0.6, duration: 0.6 }}
                                         >
                                             {turnResult.suggestion}
                                         </motion.p>
