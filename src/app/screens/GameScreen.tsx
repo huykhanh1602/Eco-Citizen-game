@@ -2,11 +2,10 @@ import { SettingsModal } from "../components/SettingsModal";
 import { Dashboard } from "../components/Dashboard";
 import { GameStage } from "../components/GameStage";
 import { ActionBar } from "../components/ActionBar";
-import { Zap, Leaf, Coins, Heart, Lightbulb, AlertCircle, Search, ChevronDown } from "lucide-react";
-import { GameEvent } from "../../utils/eventBank";
+import { Zap, Leaf, Coins, Heart } from "lucide-react";
+import { GameEvent } from "../game";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-
 interface GameScreenProps {
     language: string;
     isSettingsOpen: boolean;

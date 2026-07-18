@@ -5,6 +5,7 @@ import google.generativeai as genai
 import json
 import os
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
 load_dotenv()
 
@@ -18,6 +19,7 @@ else:
     genai.configure(api_key=GEMINI_API_KEY)
 
 app = FastAPI()
+
 
 # Configure CORS for Next.js local development
 app.add_middleware(
@@ -139,3 +141,43 @@ Respond STRICTLY with a valid JSON object matching this exact schema:
         }
         
         raise HTTPException(status_code=500, detail=fallback_response)
+    
+MONGO_URI = os.getenv("MONGO_URI")
+DB_NAME = "ECO_CITIZEN"
+COLLECTION_NAME = "eventBanks"
+
+# 3. THÊM API LẤY SỰ KIỆN NGẪU NHIÊN NÀY VÀO FILE:
+@app.get("/api/random-event")
+async def get_random_event():
+    print("=== [Python Backend] Đang có yêu cầu lấy sự kiện ngẫu nhiên ===")
+    client = None
+    try:
+        # Khởi tạo kết nối tới MongoDB Atlas
+        client = MongoClient(MONGO_URI)
+        db = client[DB_NAME]
+        collection = db[COLLECTION_NAME]
+        
+        # Bốc ngẫu nhiên 1 sự kiện từ Collection bằng Aggregation Pipeline
+        pipeline = [{"$sample": {"size": 1}}]
+        random_events = list(collection.aggregate(pipeline))
+        
+        if not random_events:
+            print("❌ Không tìm thấy sự kiện nào trong Collection!")
+            raise HTTPException(status_code=404, detail="Không có sự kiện nào trong Database")
+            
+        event = random_events[0]
+        
+        # Chuyển đổi trường _id từ dạng ObjectId của MongoDB sang String để tránh lỗi parse JSON ở Frontend
+        event["_id"] = str(event["_id"])
+        
+        print(f"👉 Đã lấy thành công sự kiện: {event.get('title', 'Không có tiêu đề')}")
+        return event
+
+    except Exception as e:
+        print(f"❌ Lỗi xử lý MongoDB phía Python: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Lỗi hệ thống backend: {str(e)}")
+        
+    finally:
+        # Đóng kết nối để tránh rò rỉ bộ nhớ
+        if client:
+            client.close()

@@ -5,7 +5,7 @@ import { useSettings } from "../contexts/SettingsContext";
 
 interface BackgroundMusicProps {
     /** Current app state to determine when to play/pause music */
-    appState: "home" | "story" | "game" | "victory" | "defeat";
+    appState: "home" | "story" | "game" | "victory" | "defeat" | "tutorial";
 }
 
 /**
@@ -17,7 +17,7 @@ interface BackgroundMusicProps {
  */
 export function BackgroundMusic({ appState }: BackgroundMusicProps) {
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const prevAppStateRef = useRef<"home" | "story" | "game" | "victory" | "defeat">(appState);
+    const prevAppStateRef = useRef<"home" | "story" | "game" | "victory" | "defeat" | "tutorial">(appState);
     const { masterVolume, musicVolume } = useSettings();
 
     // Calculate effective volume (master * music)

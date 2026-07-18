@@ -14,10 +14,17 @@ export default function Page() {
 
     return (
         <>
-            <BackgroundMusic appState={gameState.isVictory 
-      ? "victory" : gameState.gameOver 
-        ? "defeat" : gameState.appState === "tutorial" 
-          ? "home" : gameState.appState} />
+            <BackgroundMusic
+                appState={
+                    gameState.isVictory
+                        ? "victory"
+                        : gameState.gameOver
+                          ? "defeat"
+                          : gameState.appState === "tutorial"
+                            ? "home"
+                            : gameState.appState
+                }
+            />
             {gameState.appState === "home" && (
                 <HomeScreen
                     language={gameState.language}
@@ -28,10 +35,7 @@ export default function Page() {
                 />
             )}
             {gameState.appState === "story" && (
-                <StoryScreen
-                    language={gameState.language}
-                    setAppState={gameState.setAppState}
-                />
+                <StoryScreen language={gameState.language} setAppState={gameState.setAppState} />
             )}
             {gameState.appState === "game" && (
                 <GameScreen

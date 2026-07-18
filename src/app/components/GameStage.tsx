@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { AlertCircle, ShieldAlert, Flame, Siren } from "lucide-react";
-import { GameEvent } from "../../utils/eventBank";
+import { GameEvent } from "../game";
 import { useState, useEffect, useMemo } from "react";
 import { useSettings } from "../contexts/SettingsContext";
 
@@ -96,7 +96,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
 
     const particles = useMemo(
         () => Array.from({ length: 12 }, (_, i) => ({ id: i, delay: i * 0.4 })),
-        [currentEvent.id],
+        [currentEvent._id],
     );
 
     return (
@@ -118,7 +118,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
             <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
                 {particles.map((p) => (
                     <Particle
-                        key={`${currentEvent.id}-${p.id}`}
+                        key={`${currentEvent._id}-${p.id}`}
                         color={sev.particleColor}
                         delay={p.delay}
                     />
@@ -200,7 +200,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
             <div id="tutorial-event-area" className="max-w-5xl w-full flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 pb-10 mt-14 md:mt-4 relative z-10">
                 {/* Avatar */}
                 <motion.div
-                    key={currentEvent.id + "-avatar"}
+                    key={currentEvent._id + "-avatar"}
                     className="relative flex-shrink-0"
                     initial={{ opacity: 0, x: -60, rotate: -8, scale: 0.7 }}
                     animate={{ opacity: 1, x: 0, rotate: 0, scale: 1 }}
@@ -252,7 +252,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
 
                 {/* Speech Bubble */}
                 <motion.div
-                    key={currentEvent.id + "-bubble"}
+                    key={currentEvent._id + "-bubble"}
                     className={`relative bg-white rounded-[32px] p-6 md:p-10 shadow-[0_16px_48px_rgba(0,0,0,0.12)] border-4 ${sev.border} flex-1 max-w-xl`}
                     initial={{ opacity: 0, x: 60, scale: 0.88 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}

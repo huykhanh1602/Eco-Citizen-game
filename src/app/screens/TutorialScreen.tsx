@@ -14,7 +14,7 @@ interface TutorialScreenProps {
 
 // Fixed mock data for the tutorial
 const MOCK_EVENT = {
-    id: "tut_event",
+    _id: "tut_event",
     title: {
         en: "Tutorial Event",
         vi: "Sự kiện Hướng dẫn",
