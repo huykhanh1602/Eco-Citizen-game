@@ -2,7 +2,7 @@ import { SettingsModal } from "../components/SettingsModal";
 import { Dashboard } from "../components/Dashboard";
 import { GameStage } from "../components/GameStage";
 import { ActionBar } from "../components/ActionBar";
-import { Zap, Leaf, Coins, Heart, AlertCircle } from "lucide-react";
+import { Zap, Leaf, Coins, Heart, AlertCircle, Search, ChevronDown, Lightbulb } from "lucide-react";
 import { GameEvent } from "../game";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
