@@ -100,7 +100,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
     );
 
     return (
-        <main className="flex-1 overflow-y-auto w-full flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+        <main className="flex-1 w-full flex items-center justify-center p-[clamp(0.75rem,2vw,2rem)] relative overflow-hidden">
             {/* ── Background: town image ────────────────────────────────────── */}
             <div
                 className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat blur-[4px] scale-105"
@@ -197,7 +197,10 @@ export function GameStage({ currentEvent }: GameStageProps) {
             </AnimatePresence>
 
             {/* ── Main content ──────────────────────────────────────────────── */}
-            <div id="tutorial-event-area" className="max-w-5xl w-full flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 pb-10 mt-14 md:mt-4 relative z-10">
+            <div
+                id="tutorial-event-area"
+                className="max-w-5xl w-full flex flex-col md:flex-row items-center justify-center gap-[clamp(0.5rem,1.5vh,1.5rem)] md:gap-[clamp(0.75rem,2.5vw,2.5rem)] pb-[clamp(0.25rem,1vh,1rem)] mt-[clamp(2rem,6vh,3.5rem)] md:mt-[clamp(0.5rem,2vh,1rem)] relative z-10"
+            >
                 {/* Avatar */}
                 <motion.div
                     key={currentEvent.id + "-avatar"}
@@ -213,7 +216,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                     >
                         {/* Glowing ring */}
                         <div
-                            className={`relative w-48 h-48 md:w-72 md:h-72 rounded-[40px] border-[10px] border-white overflow-hidden bg-sky-100 rotate-[-2deg] flex items-center justify-center transition-shadow duration-700 ${sev.ring}`}
+                            className={`relative w-[18vh] h-[18vh] md:w-[26vh] md:h-[26vh] lg:w-[30vh] lg:h-[30vh] min-w-[80px] min-h-[80px] max-w-[260px] max-h-[260px] rounded-[40px] border-[clamp(6px,1vw,10px)] border-white overflow-hidden bg-sky-100 rotate-[-2deg] flex items-center justify-center transition-shadow duration-700 ${sev.ring}`}
                         >
                             {currentEvent.avatarUrl ? (
                                 <img
@@ -222,7 +225,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
-                                <div className="text-sky-400 text-6xl md:text-8xl">🤖</div>
+                                <div className="text-sky-400 text-[clamp(2rem,5vw,4rem)]">🤖</div>
                             )}
                         </div>
 
@@ -233,7 +236,9 @@ export function GameStage({ currentEvent }: GameStageProps) {
                             transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.5 }}
                             className={`absolute -top-3 -right-3 ${sev.iconBg} p-2.5 rounded-2xl border-4 border-white shadow-lg`}
                         >
-                            <SevIcon className={`w-6 h-6 ${sev.iconColor}`} />
+                            <SevIcon
+                                className={`w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)] ${sev.iconColor}`}
+                            />
                         </motion.div>
 
                         {/* Persona name badge */}
@@ -243,7 +248,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                             transition={{ delay: 0.4, duration: 0.5 }}
                             className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-white px-5 py-2 rounded-2xl border-4 border-slate-100 shadow-lg whitespace-nowrap"
                         >
-                            <span className="font-extrabold text-sky-600 text-sm md:text-base uppercase tracking-wide">
+                            <span className="font-extrabold text-sky-600 text-[clamp(0.6rem,1.2vw,0.875rem)] uppercase tracking-wide">
                                 {currentEvent.persona[language]}
                             </span>
                         </motion.div>
@@ -253,7 +258,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                 {/* Speech Bubble */}
                 <motion.div
                     key={currentEvent.id + "-bubble"}
-                    className={`relative bg-white rounded-[32px] p-6 md:p-10 shadow-[0_16px_48px_rgba(0,0,0,0.12)] border-4 ${sev.border} flex-1 max-w-xl`}
+                    className={`relative bg-white rounded-[clamp(16px,3vw,32px)] p-[clamp(0.75rem,2.5vw,2.5rem)] shadow-[0_16px_48px_rgba(0,0,0,0.12)] border-4 ${sev.border} flex-1 w-[92%] md:w-auto md:max-w-[min(55vw,36rem)]`}
                     initial={{ opacity: 0, x: 60, scale: 0.88 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}
                     transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.25 }}
@@ -274,10 +279,10 @@ export function GameStage({ currentEvent }: GameStageProps) {
                     />
 
                     {/* Header */}
-                    <div className="flex items-start gap-3 mb-5">
+                    <div className="flex items-start gap-[clamp(0.5rem,1vw,0.75rem)] mb-[clamp(0.5rem,1.5vh,1.25rem)]">
                         <div className={`${sev.iconBg} p-2.5 rounded-2xl flex-shrink-0 mt-0.5`}>
                             <SevIcon
-                                className={`w-6 h-6 md:w-7 md:h-7 ${sev.iconColor}`}
+                                className={`w-[clamp(1.25rem,2.5vw,1.75rem)] h-[clamp(1.25rem,2.5vw,1.75rem)] ${sev.iconColor}`}
                                 strokeWidth={2.5}
                             />
                         </div>
@@ -285,7 +290,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.45, duration: 0.5 }}
-                            className="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight leading-snug"
+                            className="text-[clamp(1rem,2.2vw,1.5rem)] font-extrabold text-slate-800 tracking-tight leading-snug"
                         >
                             {currentEvent.title[language]}
                         </motion.h2>
@@ -293,7 +298,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
 
                     {/* Divider */}
                     <motion.div
-                        className={`h-[2px] rounded-full mb-5 bg-gradient-to-r from-transparent ${sev.border.replace("border-", "via-")} to-transparent`}
+                        className={`h-[2px] rounded-full mb-[clamp(0.5rem,1.5vh,1.25rem)] bg-gradient-to-r from-transparent ${sev.border.replace("border-", "via-")} to-transparent`}
                         initial={{ scaleX: 0 }}
                         animate={{ scaleX: 1 }}
                         transition={{ delay: 0.55, duration: 0.5 }}
@@ -304,7 +309,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                         initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
                         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                         transition={{ delay: 0.6, duration: 0.65 }}
-                        className="text-slate-600 text-base md:text-lg font-medium leading-relaxed"
+                        className="text-slate-600 text-[clamp(0.8rem,1.6vw,1.125rem)] font-medium leading-relaxed"
                     >
                         &ldquo;{currentEvent.description[language]}&rdquo;
                     </motion.p>
@@ -314,7 +319,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.7, duration: 0.6 }}
-                        className="mt-6"
+                        className="mt-[clamp(0.75rem,1.5vh,1.5rem)]"
                     >
                         <p className="text-slate-500 text-sm md:text-base font-medium">
                             {/* {currentEvent.suggestion[language]} */}

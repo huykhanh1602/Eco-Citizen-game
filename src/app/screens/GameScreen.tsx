@@ -350,7 +350,7 @@ export function GameScreen({
                     const isGoodTurn = netScore >= 0;
                     return (
                         /* ── AI RESULT SCREEN ── */
-                        <main className="flex-1 overflow-y-auto w-full flex flex-col items-center p-4 md:p-8 relative overflow-hidden">
+                        <main className="flex-1 w-full flex flex-col items-center p-[clamp(0.75rem,2vw,2rem)] relative overflow-hidden">
                             {/* BG: town.png with tinted overlay */}
                             <div
                                 className="absolute inset-0 bg-cover bg-center blur-[3px] brightness-[0.55] scale-105"
