@@ -20,7 +20,7 @@ else:
 
 app = FastAPI()
 
-
+##
 # Configure CORS for Next.js local development
 app.add_middleware(
     CORSMiddleware,
