@@ -87,7 +87,7 @@ export function GameScreen({
     };
 
     return (
-        <div className="h-screen w-full flex flex-col text-slate-800 font-sans overflow-hidden">
+        <div className="h-screen w-full flex h-full flex-col text-slate-800 font-sans overflow-hidden">
             <SettingsModal
                 isOpen={isSettingsOpen}
                 onClose={() => setIsSettingsOpen(false)}
