@@ -272,7 +272,7 @@ export function GameStage({ currentEvent }: GameStageProps) {
                     />
                     {/* Bubble tail – Mobile */}
                     <div
-                        className="md:hidden absolute -top-8 left-1/2 -translate-x-1/2 w-0 h-0
+                        className="md:hidden absolute -top-8 left-1/2 -translate-x-1/2 w-0 h-0 -z-10
                         border-l-[22px] border-l-transparent
                         border-b-[30px] border-b-white
                         border-r-[22px] border-r-transparent drop-shadow-sm"

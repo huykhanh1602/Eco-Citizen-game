@@ -143,7 +143,7 @@ export function Dashboard({ month, metrics, onSettingsClick }: DashboardProps) {
                             <div
                                 key={stat.id}
                                 // Điểm nhấn đây xám cưng: w-[calc(50%-4px)] ép 2 khối 1 dòng trên mobile!
-                                className="flex flex-col w-[calc(50%-4px)] md:w-auto md:flex-1 md:max-w-[120px] items-start gap-1 md:gap-1.5 relative"
+                                className="flex flex-col w-[calc(50%-4px)] md:w-auto md:flex-1 items-start gap-1 md:gap-1.5 relative"
                             >
                                 {/* Delta indicators */}
                                 <AnimatePresence>
