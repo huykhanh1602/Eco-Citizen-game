@@ -109,86 +109,106 @@ export function Dashboard({ month, metrics, onSettingsClick }: DashboardProps) {
     ];
 
     return (
-        <header id="tutorial-indicator-bars" className="sticky top-0 z-10 w-full px-4 py-4 md:px-8 bg-white/70 backdrop-blur-xl border-b-[3px] border-slate-200">
-            <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
-                <div className="flex items-center justify-center bg-slate-800 text-white rounded-2xl px-5 py-2.5 shadow-md shadow-slate-200 min-w-[100px]">
+        <header
+            id="tutorial-indicator-bars"
+            className="sticky top-0 z-10 w-full px-3 py-3 md:px-8 md:py-4 bg-white/70 backdrop-blur-xl border-b-[3px] border-slate-200"
+        >
+            {/* Container chính bật flex-wrap để cho phép rớt dòng */}
+            <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 md:gap-4 w-full">
+                {/* HÀNG 1 (Mobile): Khối hiển thị Tháng */}
+                <div className="flex flex-col items-center justify-center bg-slate-800 text-white rounded-xl px-4 py-2 md:px-5 md:py-2.5 shadow-md flex-1 md:flex-none md:max-w-[120px]">
                     <div className="text-center">
                         <div className="text-[10px] uppercase font-bold tracking-widest text-slate-400">
                             {language === "vi" ? "Tháng" : "Month"}
                         </div>
-                        <div className="text-xl font-black">{month}</div>
+                        <div className="text-sm md:text-xl font-black">{month} / 12</div>
                     </div>
                 </div>
-                {stats.map((stat) => {
-                    const Icon = stat.icon;
-                    const statDeltas = deltas.filter((d) => d.statId === stat.id);
-                    return (
-                        <div
-                            key={stat.id}
-                            className="flex flex-col flex-1 min-w-[120px] items-start gap-1.5 relative"
-                        >
-                            {/* Delta indicators floating above the bar */}
-                            <AnimatePresence>
-                                {statDeltas.map((delta) => {
-                                    const isPositive = delta.delta > 0;
-                                    const sign = isPositive ? "+" : "";
-                                    return (
-                                        <motion.div
-                                            key={delta.id}
-                                            initial={{ opacity: 1, y: 0, scale: 1 }}
-                                            animate={{ opacity: 0, y: -40, scale: 0.6 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 1.4, ease: "easeOut" }}
-                                            onAnimationComplete={() => removeDelta(delta.id)}
-                                            className={`absolute -top-1 right-0 z-20 pointer-events-none text-[11px] font-black px-1.5 py-0.5 rounded-md ${
-                                                isPositive
-                                                    ? "text-emerald-700 bg-emerald-100 border border-emerald-300"
-                                                    : "text-rose-700 bg-rose-100 border border-rose-300"
-                                            }`}
-                                        >
-                                            {sign}
-                                            {delta.delta}
-                                        </motion.div>
-                                    );
-                                })}
-                            </AnimatePresence>
 
-                            <div className="flex items-center gap-1.5 px-1 w-full">
-                                <Icon
-                                    className={`w-5 h-5 ${stat.iconColor} fill-current/20 shrink-0`}
-                                    strokeWidth={2.5}
-                                />
-                                <span className="font-extrabold text-slate-700 text-sm uppercase tracking-wide">
-                                    {stat.label}
-                                </span>
-                            </div>
-                            <div className={`w-full h-5 rounded-full ${stat.track} p-1 relative`}>
-                                <div
-                                    className={`h-full ${stat.color} rounded-full transition-all duration-1000 ease-out relative overflow-hidden`}
-                                    style={{ width: `${Math.max(0, Math.min(100, stat.value))}%` }}
-                                >
-                                    {/* Subtle 3D highlight */}
-                                    <div className="absolute top-0.5 left-1 right-1 h-1 bg-white/40 rounded-full" />
-                                </div>
-                                {/* Pulse glow when value changes */}
-                                {statDeltas.length > 0 && (
-                                    <motion.div
-                                        className={`absolute inset-0 rounded-full ${stat.color} opacity-40`}
-                                        initial={{ scale: 1 }}
-                                        animate={{ scale: [1, 1.15, 1] }}
-                                        transition={{ duration: 0.8, ease: "easeOut" }}
-                                    />
-                                )}
-                            </div>
-                        </div>
-                    );
-                })}
+                {/* HÀNG 1 (Mobile): Nút cài đặt */}
+                {/* Ma pháp md:order-last giúp nó tự động chạy về cuối cùng khi mở trên máy tính */}
                 <button
                     onClick={onSettingsClick}
-                    className="p-3 bg-slate-100 hover:bg-slate-200 rounded-2xl transition-colors text-slate-600 shadow-sm"
+                    className="p-2.5 md:p-3 bg-slate-100 hover:bg-slate-200 rounded-xl md:rounded-2xl transition-colors text-slate-600 shadow-sm shrink-0 md:order-last"
                 >
-                    <Settings className="w-6 h-6" />
+                    <Settings className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
+
+                {/* HÀNG 2 (Mobile): Bọc 4 chỉ số vào một khối riêng */}
+                <div className="flex flex-wrap md:flex-nowrap items-center w-full md:w-auto md:flex-1 gap-2 md:gap-4 order-last md:order-none mt-1 md:mt-0">
+                    {stats.map((stat) => {
+                        const Icon = stat.icon;
+                        const statDeltas = deltas.filter((d) => d.statId === stat.id);
+                        return (
+                            <div
+                                key={stat.id}
+                                // Điểm nhấn đây xám cưng: w-[calc(50%-4px)] ép 2 khối 1 dòng trên mobile!
+                                className="flex flex-col w-[calc(50%-4px)] md:w-auto md:flex-1 md:max-w-[120px] items-start gap-1 md:gap-1.5 relative"
+                            >
+                                {/* Delta indicators */}
+                                <AnimatePresence>
+                                    {statDeltas.map((delta) => {
+                                        const isPositive = delta.delta > 0;
+                                        const sign = isPositive ? "+" : "";
+                                        return (
+                                            <motion.div
+                                                key={delta.id}
+                                                initial={{ opacity: 1, y: 0, scale: 1 }}
+                                                animate={{ opacity: 0, y: -40, scale: 0.6 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 1.4, ease: "easeOut" }}
+                                                onAnimationComplete={() => removeDelta(delta.id)}
+                                                className={`absolute -top-2 md:-top-1 right-0 z-20 pointer-events-none text-[10px] md:text-[11px] font-black px-1 py-0.5 md:px-1.5 rounded-md ${
+                                                    isPositive
+                                                        ? "text-emerald-700 bg-emerald-100 border border-emerald-300"
+                                                        : "text-rose-700 bg-rose-100 border border-rose-300"
+                                                }`}
+                                            >
+                                                {sign}
+                                                {delta.delta}
+                                            </motion.div>
+                                        );
+                                    })}
+                                </AnimatePresence>
+
+                                <div className="flex items-center gap-1 md:gap-1.5 px-1 w-full">
+                                    <Icon
+                                        className={`w-4 h-4 md:w-5 md:h-5 ${stat.iconColor} fill-current/20 shrink-0`}
+                                        strokeWidth={2.5}
+                                    />
+                                    <span className="font-extrabold text-slate-700 text-[10px] md:text-sm uppercase tracking-wide truncate w-full">
+                                        {stat.label}
+                                    </span>
+                                </div>
+                                <div
+                                    className={`w-full h-3.5 md:h-5 rounded-full ${stat.track} p-0.5 md:p-1 relative`}
+                                >
+                                    <div
+                                        className={`h-full ${stat.color} rounded-full transition-all duration-1000 ease-out relative overflow-hidden z-0`}
+                                        style={{
+                                            width: `${Math.max(0, Math.min(100, stat.value))}%`,
+                                        }}
+                                    >
+                                        <div className="absolute top-0.5 left-1 right-1 h-1 bg-white/40 rounded-full" />
+                                    </div>
+
+                                    <span className="absolute left-2 md:left-2.5 top-1/2 -translate-y-1/2 font-bold text-white text-[9px] md:text-xs z-10 drop-shadow-md pointer-events-none">
+                                        {stat.value}
+                                    </span>
+
+                                    {statDeltas.length > 0 && (
+                                        <motion.div
+                                            className={`absolute inset-0 rounded-full ${stat.color} opacity-40 pointer-events-none`}
+                                            initial={{ scale: 1 }}
+                                            animate={{ scale: [1, 1.15, 1] }}
+                                            transition={{ duration: 0.8, ease: "easeOut" }}
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </header>
     );
