@@ -222,7 +222,7 @@ export function TutorialScreen({
     };
 
     const handleFinish = () => {
-        setAppState("game"); // Or "story" if you prefer
+        setAppState("home");
     };
 
     return (
