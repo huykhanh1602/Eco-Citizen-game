@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { getRandomEvent, GameEvent } from "../../utils/eventBank";
+import { useState, useEffect, useCallback } from "react";
+import { getRandomEventBySeverity, GameEvent } from "../../utils/eventBank";
 import { useSettings } from "../contexts/SettingsContext";
 
 export function useGameState() {
@@ -23,8 +23,24 @@ export function useGameState() {
     const [gameOver, setGameOver] = useState<string | null>(null);
     const [isVictory, setIsVictory] = useState(false);
     const [month, setMonth] = useState(1);
+    const [usedEventIds, setUsedEventIds] = useState<Set<string>>(new Set());
 
     const { language } = useSettings();
+
+    // ── Round → Severity mapping ──────────────────────────────────────────
+    const getSeverityForMonth = useCallback((m: number): 1 | 2 | 3 => {
+        return Math.ceil(m / 4) as 1 | 2 | 3;
+    }, []);
+
+    // ── Helper: pick an event by severity and track it ────────────────────
+    const pickAndTrackEvent = useCallback(
+        (severity: 1 | 2 | 3, existingUsedIds: Set<string>): GameEvent => {
+            const event = getRandomEventBySeverity(severity, existingUsedIds);
+            setUsedEventIds(new Set(existingUsedIds).add(event.id));
+            return event;
+        },
+        [],
+    );
 
     // Initialization & Load from LocalStorage
     useEffect(() => {
@@ -39,12 +55,22 @@ export function useGameState() {
                 if (parsed.gameOver !== undefined) setGameOver(parsed.gameOver);
                 if (parsed.isVictory !== undefined) setIsVictory(parsed.isVictory);
                 if (parsed.month !== undefined) setMonth(parsed.month);
+                if (parsed.usedEventIds) {
+                    setUsedEventIds(new Set(parsed.usedEventIds));
+                } else if (parsed.currentEvent) {
+                    // Migration: ensure the current event is in the set
+                    setUsedEventIds(new Set([parsed.currentEvent.id]));
+                }
             } catch (e) {
                 console.error("Failed to parse saved game state");
-                setCurrentEvent(getRandomEvent());
+                const freshEvent = getRandomEventBySeverity(1, new Set());
+                setCurrentEvent(freshEvent);
+                setUsedEventIds(new Set([freshEvent.id]));
             }
         } else {
-            setCurrentEvent(getRandomEvent());
+            const freshEvent = getRandomEventBySeverity(1, new Set());
+            setCurrentEvent(freshEvent);
+            setUsedEventIds(new Set([freshEvent.id]));
         }
 
         setMounted(true);
@@ -62,9 +88,20 @@ export function useGameState() {
             gameOver,
             isVictory,
             month,
+            usedEventIds: Array.from(usedEventIds),
         };
         localStorage.setItem("ecoCitizenGameState", JSON.stringify(gameState));
-    }, [appState, metrics, currentEvent, turnResult, gameOver, isVictory, month, mounted]);
+    }, [
+        appState,
+        metrics,
+        currentEvent,
+        turnResult,
+        gameOver,
+        isVictory,
+        month,
+        usedEventIds,
+        mounted,
+    ]);
 
     // Handling Submission
     const handleSubmit = async (e?: React.FormEvent) => {
@@ -153,21 +190,25 @@ export function useGameState() {
             setIsVictory(true);
             return;
         }
+        const nextMonth = month + 1;
+        const severity = getSeverityForMonth(nextMonth);
         setTurnResult(null);
         setUserInput("");
-        setCurrentEvent(getRandomEvent());
-        setMonth((prev) => prev + 1);
+        setCurrentEvent(pickAndTrackEvent(severity, usedEventIds));
+        setMonth(nextMonth);
     };
 
     const handleRestart = () => {
         setMetrics({ energy: 50, environment: 50, budget: 50, trust: 50 });
-        setCurrentEvent(getRandomEvent());
         setTurnResult(null);
         setUserInput("");
         setGameOver(null);
         setIsVictory(false);
         setMonth(1);
         setAppState("story");
+        const freshEvent = getRandomEventBySeverity(1, new Set());
+        setCurrentEvent(freshEvent);
+        setUsedEventIds(new Set([freshEvent.id]));
     };
 
     const handleGoHome = () => {
